@@ -1,5 +1,5 @@
 ---
-description: Genera un artículo para tu blog basado en tu experiencia con IA (compatible con web)
+description: Genera un artículo para tu blog basado en tu experiencia con IA
 allowed-tools: Bash, Read, Write
 ---
 
@@ -7,14 +7,16 @@ Genera un artículo para mi blog basado en mi experiencia de hoy con Claude Code
 
 **Tema del artículo:** $ARGUMENTS
 
-**IMPORTANTE:** Primero crea los directorios:
+**Directorio de datos:** Guarda en el repositorio en `ai-logger/data/articles/`
+
+Primero verifica:
 ```bash
-mkdir -p ~/.ai-logger/articles
+mkdir -p ai-logger/data/articles
 ```
 
 ## Estructura del Artículo
 
-Analiza nuestra conversación y crea un artículo completo en Markdown:
+Analiza nuestra conversación y crea un artículo completo:
 
 ```markdown
 ---
@@ -29,31 +31,27 @@ draft: true
 
 ## Introducción
 
-[Párrafo que enganche al lector. ¿Por qué debería importarle este tema?]
+[Párrafo que enganche al lector. ¿Por qué debería importarle?]
 
 ## El Contexto
 
-[Describe el proyecto/situación. ¿Qué estabas haciendo? ¿Cuál era el objetivo?]
+[Describe el proyecto/situación]
 
 ## El Desafío
 
-[¿Cuál era el problema específico? ¿Por qué era difícil?]
+[¿Cuál era el problema? ¿Por qué era difícil?]
 
 ## Mi Enfoque con Claude Code
 
-[Cómo decidiste usar IA para resolver esto]
+[Cómo usé IA para resolver esto]
 
 ### Lo que Funcionó
 
-[Ejemplos concretos de prompts o interacciones exitosas]
-
-```
-Ejemplo de prompt que funcionó bien
-```
+[Ejemplos concretos de prompts exitosos]
 
 ### Lo que No Funcionó
 
-[Intentos fallidos - esto es valioso para otros]
+[Intentos fallidos - valioso para otros]
 
 ### El Momento "Ajá"
 
@@ -63,41 +61,31 @@ Ejemplo de prompt que funcionó bien
 
 [Código o cambios implementados]
 
-```[lenguaje]
-// Código resultante
-```
-
 ## Lecciones Aprendidas
 
 1. **Lección 1:** Explicación
 2. **Lección 2:** Explicación
-3. **Lección 3:** Explicación
 
 ## Tips para Ti
 
-Si te encuentras en una situación similar:
-
 - Tip práctico 1
 - Tip práctico 2
-- Tip práctico 3
 
 ## Conclusión
 
-[Reflexión final. ¿Qué valor obtuviste? ¿Cómo cambió tu forma de trabajar?]
+[Reflexión final]
 
 ---
-
-*¿Te fue útil? Comparte tu experiencia en los comentarios.*
+*¿Te fue útil? Comparte tu experiencia.*
 ```
 
 ## Instrucciones
 
-1. Analiza TODA la conversación buscando momentos interesantes
+1. Analiza TODA la conversación
 2. Identifica el "arco narrativo" (problema → proceso → solución)
-3. Extrae ejemplos concretos y código relevante
-4. Genera el artículo completo
-5. Guarda en: `~/.ai-logger/articles/draft-$(date +%Y-%m-%d)-[slug].md`
+3. Extrae ejemplos y código relevante
+4. Guarda en: `ai-logger/data/articles/draft-YYYY-MM-DD-[slug].md`
 
-El slug debe ser el tema en minúsculas con guiones (ej: "debugging-memory-leak")
+El slug = tema en minúsculas con guiones.
 
-Muestra una vista previa del artículo al final.
+Muestra vista previa y confirma ubicación.

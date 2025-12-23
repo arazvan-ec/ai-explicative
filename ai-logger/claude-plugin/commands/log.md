@@ -1,16 +1,24 @@
 ---
-description: Registra una nota o reflexión sobre tu experiencia con IA
-allowed-tools: Bash
+description: Registra una nota o reflexión rápida
+allowed-tools: Bash, Write
 ---
 
 Registra esta nota en mi diario de experiencias con IA:
 
-"$ARGUMENTS"
+**Nota:** $ARGUMENTS
 
-1. Crea el directorio si no existe: `mkdir -p ~/.ai-logger/notes`
+**Directorio:** `ai-logger/data/notes/`
 
-2. Agrega la nota al archivo de notas del día con este formato:
+## Instrucciones
+
+1. Crea el directorio si no existe:
+```bash
+mkdir -p ai-logger/data/notes
 ```
+
+2. Agrega la nota al archivo del día con formato:
+
+```markdown
 ## [HH:MM] Nota
 
 $ARGUMENTS
@@ -18,6 +26,12 @@ $ARGUMENTS
 ---
 ```
 
-3. Guárdala en: `~/.ai-logger/notes/notes-$(date +%Y-%m-%d).md`
+3. Guarda en: `ai-logger/data/notes/notes-YYYY-MM-DD.md`
 
-4. Confirma que se guardó exitosamente.
+4. Si el archivo no existe, créalo con header:
+```markdown
+# Notas - YYYY-MM-DD
+
+```
+
+5. Confirma que se guardó.

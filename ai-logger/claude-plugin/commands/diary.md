@@ -1,13 +1,15 @@
 ---
-description: Genera un resumen/diario de tu sesión con Claude Code (compatible con web)
+description: Genera un resumen/diario de tu sesión con Claude Code
 allowed-tools: Bash, Read, Write
 ---
 
 Genera un diario/resumen de mi sesión actual con Claude Code.
 
-**IMPORTANTE:** Primero asegúrate de que existen los directorios:
+**Directorio de datos:** Guarda todo en el repositorio actual en `ai-logger/data/diary/`
+
+Primero verifica que existe:
 ```bash
-mkdir -p ~/.ai-logger/diary
+mkdir -p ai-logger/data/diary
 ```
 
 Analiza el contexto completo de nuestra conversación y crea un resumen estructurado.
@@ -26,8 +28,8 @@ Crea un archivo Markdown con esta estructura:
 [Qué quería lograr el usuario]
 
 ## Tareas Completadas
-- [ ] Tarea 1
-- [ ] Tarea 2
+- [x] Tarea 1
+- [x] Tarea 2
 
 ## Herramientas Utilizadas
 | Herramienta | Para qué |
@@ -66,7 +68,7 @@ Crea un archivo Markdown con esta estructura:
 1. Analiza TODA la conversación actual
 2. Extrae los puntos clave
 3. Genera el diario completo
-4. Guarda en: `~/.ai-logger/diary/diary-$(date +%Y-%m-%d).md`
+4. Guarda en: `ai-logger/data/diary/diary-YYYY-MM-DD.md` (usa la fecha de hoy)
 5. Si ya existe, agrega como nueva sección con la hora
 
-Muestra el contenido generado al final.
+Muestra el contenido generado y confirma dónde se guardó.
