@@ -3,375 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LLM Coding Workflow 2026</title>
+    <title>AI en Desarrollo - Mi Experiencia</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState } = React;
-
-        const OsmaniWorkflow = () => {
-          const [activeStep, setActiveStep] = useState(null);
-          const [activePhase, setActivePhase] = useState('all');
-
-          const phases = {
-            planning: { color: 'bg-blue-500', label: 'Planificación', icon: '📋' },
-            execution: { color: 'bg-green-500', label: 'Ejecución', icon: '⚡' },
-            quality: { color: 'bg-purple-500', label: 'Calidad', icon: '✅' },
-            mindset: { color: 'bg-orange-500', label: 'Mentalidad', icon: '🧠' }
-          };
-
-          const steps = [
-            {
-              id: 1,
-              phase: 'planning',
-              title: '1. Planifica Primero',
-              subtitle: 'Specs antes de código',
-              icon: '📝',
-              keyPoints: [
-                'Crea un spec.md detallado con requisitos',
-                'Haz que el LLM te haga preguntas para refinar',
-                'Genera un plan de proyecto paso a paso',
-                '"Waterfall en 15 minutos" - planificación rápida estructurada'
-              ],
-              example: 'Prompt: "Iterativamente hazme preguntas hasta definir requisitos y casos edge"',
-              antiPattern: '❌ Lanzar deseos vagos al LLM sin contexto'
-            },
-            {
-              id: 2,
-              phase: 'execution',
-              title: '2. Divide en Trozos Pequeños',
-              subtitle: 'Iteraciones manejables',
-              icon: '🧩',
-              keyPoints: [
-                'Una función, un bug, una feature a la vez',
-                'Evita outputs monolíticos grandes',
-                'Lleva el contexto de lo construido entre iteraciones',
-                'Compatible con TDD - tests por cada pieza'
-              ],
-              example: 'Prompt: "Implementemos el Paso 1 del plan" → test → "Ahora Paso 2"',
-              antiPattern: '❌ Pedir apps enteras = "10 devs sin comunicarse"'
-            },
-            {
-              id: 3,
-              phase: 'execution',
-              title: '3. Provee Contexto Extenso',
-              subtitle: 'El LLM es tan bueno como su contexto',
-              icon: '📚',
-              keyPoints: [
-                'Incluye código relevante, docs y restricciones',
-                'Usa herramientas como gitingest o repo2txt',
-                'Implementa Claude Skills para conocimiento reutilizable',
-                'Guía con comentarios inline y reglas en el prompt'
-              ],
-              example: 'Brain dump: objetivos, invariantes, ejemplos buenos, enfoques a evitar',
-              antiPattern: '❌ Hacer que el AI opere con información parcial'
-            },
-            {
-              id: 4,
-              phase: 'execution',
-              title: '4. Elige el Modelo Correcto',
-              subtitle: 'Usa múltiples si es necesario',
-              icon: '🔄',
-              keyPoints: [
-                'Cada modelo tiene su "personalidad"',
-                'Si uno se atasca, prueba otro',
-                'Usa la mejor versión disponible (tiers pro)',
-                'Cross-check con modelos paralelos'
-              ],
-              example: 'Claude escribe → Gemini revisa, o viceversa',
-              antiPattern: '❌ Quedarse atascado con un solo modelo'
-            },
-            {
-              id: 5,
-              phase: 'execution',
-              title: '5. AI en Todo el Ciclo',
-              subtitle: 'Herramientas especializadas',
-              icon: '🔧',
-              keyPoints: [
-                'CLI: Claude Code, Codex CLI, Gemini CLI',
-                'Agentes async: Jules, Copilot Agent (PRs automáticos)',
-                'IDE: Cursor, Copilot, Windsurf',
-                'Supervisión activa - no son infalibles'
-              ],
-              example: '~90% del código de Claude Code está escrito por Claude Code',
-              antiPattern: '❌ Dejar agentes trabajar sin supervisión'
-            },
-            {
-              id: 6,
-              phase: 'quality',
-              title: '6. Humano en el Loop',
-              subtitle: 'Verifica, testea, revisa TODO',
-              icon: '👁️',
-              keyPoints: [
-                'Trata cada output como de un junior developer',
-                'Lee el código línea por línea',
-                'Usa Chrome DevTools MCP para debugging',
-                'AI revisando AI puede captar errores sutiles'
-              ],
-              example: 'Si algo es confuso: "Añade comentarios explicando" o reescríbelo',
-              antiPattern: '❌ Merge código sin entenderlo'
-            },
-            {
-              id: 7,
-              phase: 'quality',
-              title: '7. Commits Frecuentes',
-              subtitle: 'Git como red de seguridad',
-              icon: '💾',
-              keyPoints: [
-                'Commits como "save points" en un juego',
-                'Ultra-granular: después de cada tarea pequeña',
-                'Usa branches/worktrees para experimentos AI',
-                'Nunca commitear código que no puedas explicar'
-              ],
-              example: 'Finish task → run tests → commit → next task',
-              antiPattern: '❌ Un giant commit "AI changes"'
-            },
-            {
-              id: 8,
-              phase: 'planning',
-              title: '8. Personaliza el Comportamiento',
-              subtitle: 'Reglas, ejemplos y archivos de config',
-              icon: '⚙️',
-              keyPoints: [
-                'CLAUDE.md / GEMINI.md con reglas del proyecto',
-                'Custom instructions en Copilot/Cursor',
-                'Ejemplos inline del formato deseado',
-                '"No hallucination" clauses en prompts'
-              ],
-              example: '"Si no estás seguro, pregunta en vez de inventar"',
-              antiPattern: '❌ Aceptar el estilo default del AI'
-            },
-            {
-              id: 9,
-              phase: 'quality',
-              title: '9. Testing & Automation',
-              subtitle: 'Multiplicadores de fuerza',
-              icon: '🔬',
-              keyPoints: [
-                'CI/CD robusto en cada repo con AI',
-                'Linters y type checkers como guías',
-                'Feedback logs de fallos al AI para debug',
-                'AI-on-AI code reviews'
-              ],
-              example: 'AI abre PR → CI falla → feedback al AI → fix → iterate',
-              antiPattern: '❌ Sin tests = bugs sutiles pasan'
-            },
-            {
-              id: 10,
-              phase: 'mindset',
-              title: '10. Aprende Continuamente',
-              subtitle: 'AI amplifica tus habilidades',
-              icon: '📈',
-              keyPoints: [
-                'AI expone nuevos lenguajes y técnicas',
-                'Prácticas senior = mejores resultados con AI',
-                'Revisa código AI → aprendes nuevos idioms',
-                'Codea sin AI ocasionalmente para mantener skills'
-              ],
-              example: 'Pide al AI que explique su código - como entrevistar candidatos',
-              antiPattern: '❌ Depender sin entender = Dunning-Kruger'
-            }
-          ];
-
-          const coreMessage = {
-            title: 'Filosofía Central',
-            quote: '"El LLM es un pair programmer poderoso que requiere dirección clara, contexto y supervisión — no juicio autónomo"',
-            author: '— Addy Osmani'
-          };
-
-          const filteredSteps = activePhase === 'all'
-            ? steps
-            : steps.filter(s => s.phase === activePhase);
-
-          return (
-            <div className="min-h-screen bg-gray-900 text-white p-6">
-              <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-8">
-                  <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    LLM Coding Workflow 2026
-                  </h1>
-                  <p className="text-gray-400">Flujo de trabajo de Addy Osmani para desarrollo asistido por IA</p>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-gray-900/80 backdrop-blur-sm z-50 border-b border-gray-700">
+        <div class="max-w-6xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    AI Dev Experience
+                </a>
+                <div class="flex gap-6">
+                    <a href="#about" class="hover:text-blue-400 transition">Sobre mí</a>
+                    <a href="#posts" class="hover:text-blue-400 transition">Posts</a>
+                    <a href="#contact" class="hover:text-blue-400 transition">Contacto</a>
                 </div>
-
-                <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-8 border border-blue-500/30">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-2xl">💡</span>
-                    <h2 className="text-xl font-semibold text-blue-300">{coreMessage.title}</h2>
-                  </div>
-                  <blockquote className="text-lg italic text-gray-300 border-l-4 border-blue-500 pl-4">
-                    {coreMessage.quote}
-                  </blockquote>
-                  <p className="text-right text-gray-500 mt-2">{coreMessage.author}</p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 mb-6 justify-center">
-                  <button
-                    onClick={() => setActivePhase('all')}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                      activePhase === 'all'
-                        ? 'bg-white text-gray-900'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                    }`}
-                  >
-                    📊 Todos
-                  </button>
-                  {Object.entries(phases).map(([key, { label, icon }]) => (
-                    <button
-                      key={key}
-                      onClick={() => setActivePhase(key)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                        activePhase === key
-                          ? 'bg-white text-gray-900'
-                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                      }`}
-                    >
-                      {icon} {label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  {filteredSteps.map((step) => (
-                    <div
-                      key={step.id}
-                      onClick={() => setActiveStep(activeStep === step.id ? null : step.id)}
-                      className={`bg-gray-800 rounded-xl p-5 cursor-pointer transition-all duration-300 border-2 ${
-                        activeStep === step.id
-                          ? 'border-blue-500 shadow-lg shadow-blue-500/20'
-                          : 'border-gray-700 hover:border-gray-600'
-                      }`}
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-lg ${phases[step.phase].color} flex items-center justify-center text-2xl flex-shrink-0`}>
-                          {step.icon}
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-lg">{step.title}</h3>
-                            <span className={`text-xs px-2 py-0.5 rounded-full ${phases[step.phase].color} bg-opacity-20 text-gray-300`}>
-                              {phases[step.phase].label}
-                            </span>
-                          </div>
-                          <p className="text-gray-400 text-sm mb-3">{step.subtitle}</p>
-
-                          {activeStep === step.id && (
-                            <div className="mt-4 space-y-4">
-                              <div>
-                                <h4 className="text-sm font-medium text-blue-400 mb-2">Puntos Clave:</h4>
-                                <ul className="space-y-1">
-                                  {step.keyPoints.map((point, i) => (
-                                    <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
-                                      <span className="text-green-400 mt-1">•</span>
-                                      {point}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div className="bg-gray-900/50 rounded-lg p-3">
-                                <h4 className="text-sm font-medium text-green-400 mb-1">💡 Ejemplo:</h4>
-                                <p className="text-sm text-gray-300 font-mono">{step.example}</p>
-                              </div>
-
-                              <div className="bg-red-900/20 rounded-lg p-3 border border-red-500/30">
-                                <h4 className="text-sm font-medium text-red-400 mb-1">Anti-patrón:</h4>
-                                <p className="text-sm text-gray-300">{step.antiPattern}</p>
-                              </div>
-                            </div>
-                          )}
-
-                          {activeStep !== step.id && (
-                            <p className="text-xs text-gray-500 mt-2">Click para expandir →</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-10 bg-gray-800 rounded-xl p-6">
-                  <h2 className="text-xl font-semibold mb-6 text-center">🔄 Flujo de Trabajo Visual</h2>
-                  <div className="flex flex-wrap justify-center items-center gap-2 text-sm">
-                    {[
-                      { step: 'Spec.md', icon: '📝', color: 'bg-blue-500' },
-                      { step: '→', icon: '', color: '' },
-                      { step: 'Plan', icon: '📋', color: 'bg-blue-500' },
-                      { step: '→', icon: '', color: '' },
-                      { step: 'Chunk 1', icon: '🧩', color: 'bg-green-500' },
-                      { step: '→', icon: '', color: '' },
-                      { step: 'Test', icon: '🔬', color: 'bg-purple-500' },
-                      { step: '→', icon: '', color: '' },
-                      { step: 'Review', icon: '👁️', color: 'bg-purple-500' },
-                      { step: '→', icon: '', color: '' },
-                      { step: 'Commit', icon: '💾', color: 'bg-purple-500' },
-                      { step: '↩️', icon: '', color: '' },
-                    ].map((item, i) => (
-                      item.color ? (
-                        <div key={i} className={`${item.color} px-3 py-2 rounded-lg flex items-center gap-2`}>
-                          <span>{item.icon}</span>
-                          <span>{item.step}</span>
-                        </div>
-                      ) : (
-                        <span key={i} className="text-gray-500 text-lg">{item.step}</span>
-                      )
-                    ))}
-                  </div>
-                  <p className="text-center text-gray-500 text-sm mt-4">
-                    Repetir para cada chunk hasta completar el plan
-                  </p>
-                </div>
-
-                <div className="mt-8 grid md:grid-cols-3 gap-4">
-                  <div className="bg-gray-800 rounded-xl p-4">
-                    <h3 className="font-semibold text-blue-400 mb-3">🖥️ CLI Agents</h3>
-                    <ul className="text-sm text-gray-300 space-y-1">
-                      <li>• Claude Code</li>
-                      <li>• Codex CLI (OpenAI)</li>
-                      <li>• Gemini CLI</li>
-                    </ul>
-                  </div>
-                  <div className="bg-gray-800 rounded-xl p-4">
-                    <h3 className="font-semibold text-green-400 mb-3">🤖 Async Agents</h3>
-                    <ul className="text-sm text-gray-300 space-y-1">
-                      <li>• Jules (Google)</li>
-                      <li>• GitHub Copilot Agent</li>
-                      <li>• Conductor (orchestration)</li>
-                    </ul>
-                  </div>
-                  <div className="bg-gray-800 rounded-xl p-4">
-                    <h3 className="font-semibold text-purple-400 mb-3">📁 Context Tools</h3>
-                    <ul className="text-sm text-gray-300 space-y-1">
-                      <li>• Claude Skills</li>
-                      <li>• gitingest / repo2txt</li>
-                      <li>• Chrome DevTools MCP</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-8 bg-gradient-to-r from-green-900/50 to-blue-900/50 rounded-xl p-6 border border-green-500/30 text-center">
-                  <h2 className="text-xl font-bold mb-2">🎯 Conclusión Principal</h2>
-                  <p className="text-lg text-gray-300">
-                    "AI coding assistants son <span className="text-green-400 font-semibold">multiplicadores de fuerza increíbles</span>,
-                    pero el <span className="text-blue-400 font-semibold">ingeniero humano sigue siendo el director del show</span>."
-                  </p>
-                </div>
-
-                <div className="mt-6 text-center text-gray-500 text-sm">
-                  <p>Basado en el artículo de Addy Osmani (Engineering Leader @ Google Chrome)</p>
-                  <p className="mt-1">Libro: "Beyond Vibe Coding" - O'Reilly</p>
-                </div>
-              </div>
             </div>
-          );
-        };
+        </div>
+    </nav>
 
-        ReactDOM.render(<OsmaniWorkflow />, document.getElementById('root'));
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center pt-20 px-6">
+        <div class="max-w-4xl text-center">
+            <div class="float-animation mb-8">
+                <div class="text-6xl mb-4">🤖</div>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Desarrollando con IA
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8">
+                Compartiendo mi experiencia, aprendizajes y mejores prácticas en el desarrollo de software asistido por inteligencia artificial
+            </p>
+            <div class="flex gap-4 justify-center">
+                <a href="#posts" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-semibold transition transform hover:scale-105">
+                    Ver Posts
+                </a>
+                <a href="#about" class="bg-gray-700 hover:bg-gray-600 px-8 py-3 rounded-full font-semibold transition transform hover:scale-105">
+                    Sobre mí
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-20 px-6 bg-gray-800/50">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="p-6">
+                    <div class="text-4xl font-bold text-blue-400 mb-2">10+</div>
+                    <div class="text-gray-400">Proyectos con IA</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold text-purple-400 mb-2">100%</div>
+                    <div class="text-gray-400">Mejora en Productividad</div>
+                </div>
+                <div class="p-6">
+                    <div class="text-4xl font-bold text-pink-400 mb-2">5+</div>
+                    <div class="text-gray-400">Herramientas Dominadas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-8 text-center">Sobre mí</h2>
+            <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700">
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <div class="w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-5xl">
+                        👨‍💻
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-4">Desarrollador apasionado por la IA</h3>
+                        <p class="text-gray-300 mb-4">
+                            He estado explorando cómo la inteligencia artificial está transformando la forma en que desarrollamos software.
+                            Mi objetivo es compartir conocimientos prácticos, workflows efectivos y lecciones aprendidas en este viaje.
+                        </p>
+                        <p class="text-gray-300">
+                            Creo firmemente que la IA es un multiplicador de fuerza increíble, pero el desarrollador humano sigue siendo
+                            el director del show. Aquí documento mi experiencia para ayudar a otros a navegar este nuevo paradigma.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section class="py-20 px-6 bg-gray-800/50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center">Herramientas que uso</h2>
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-blue-500 transition">
+                    <div class="text-3xl mb-3">🤖</div>
+                    <h3 class="font-bold mb-2">Claude Code</h3>
+                    <p class="text-sm text-gray-400">CLI para desarrollo interactivo</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition">
+                    <div class="text-3xl mb-3">💻</div>
+                    <h3 class="font-bold mb-2">Cursor</h3>
+                    <p class="text-sm text-gray-400">Editor con IA integrada</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-green-500 transition">
+                    <div class="text-3xl mb-3">🔧</div>
+                    <h3 class="font-bold mb-2">GitHub Copilot</h3>
+                    <p class="text-sm text-gray-400">Asistente de código</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-pink-500 transition">
+                    <div class="text-3xl mb-3">⚡</div>
+                    <h3 class="font-bold mb-2">ChatGPT</h3>
+                    <p class="text-sm text-gray-400">Consultas y arquitectura</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Posts Section -->
+    <section id="posts" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center">Posts recientes</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Post 1: Osmani Workflow -->
+                <article class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-blue-500 transition transform hover:scale-105">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 h-48 flex items-center justify-center">
+                        <div class="text-6xl">📋</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex gap-2 mb-3">
+                            <span class="text-xs bg-blue-600 px-3 py-1 rounded-full">Workflow</span>
+                            <span class="text-xs bg-purple-600 px-3 py-1 rounded-full">Productividad</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">LLM Coding Workflow 2026</h3>
+                        <p class="text-gray-400 mb-4">
+                            Descubre el workflow de 10 pasos de Addy Osmani para maximizar tu productividad con IA.
+                            Desde la planificación hasta el deployment, aprende las mejores prácticas.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">10 minutos de lectura</span>
+                            <a href="posts/osmani-workflow.html" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-full text-sm font-semibold transition">
+                                Leer más →
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Post 2: Placeholder (próximamente) -->
+                <article class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 opacity-60">
+                    <div class="bg-gradient-to-r from-green-600 to-teal-600 h-48 flex items-center justify-center">
+                        <div class="text-6xl">🚀</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex gap-2 mb-3">
+                            <span class="text-xs bg-green-600 px-3 py-1 rounded-full">Próximamente</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Mis herramientas favoritas</h3>
+                        <p class="text-gray-400 mb-4">
+                            Una guía completa de las herramientas de IA que uso diariamente y cómo las integro
+                            en mi workflow de desarrollo.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Próximamente</span>
+                            <button disabled class="bg-gray-700 px-6 py-2 rounded-full text-sm font-semibold cursor-not-allowed">
+                                Próximamente
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 px-6 bg-gradient-to-r from-blue-900/50 to-purple-900/50">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4">Mantente actualizado</h2>
+            <p class="text-xl text-gray-300 mb-8">
+                Recibe las últimas actualizaciones sobre desarrollo con IA directamente en tu inbox
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center max-w-lg mx-auto">
+                <input
+                    type="email"
+                    placeholder="tu@email.com"
+                    class="flex-1 px-6 py-3 rounded-full bg-gray-800 border border-gray-700 focus:border-blue-500 focus:outline-none"
+                >
+                <button class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full font-semibold transition transform hover:scale-105">
+                    Suscribirse
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mt-4">Sin spam. Cancela cuando quieras.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-8">Conectemos</h2>
+            <p class="text-xl text-gray-300 mb-8">
+                ¿Tienes preguntas o quieres compartir tu experiencia? Me encantaría escucharte
+            </p>
+            <div class="flex gap-6 justify-center">
+                <a href="https://github.com/arazvan-ec" target="_blank" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-full transition transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-full transition transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+                </a>
+                <a href="https://linkedin.com" target="_blank" class="bg-gray-800 hover:bg-gray-700 p-4 rounded-full transition transform hover:scale-110">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 border-t border-gray-700 bg-gray-900">
+        <div class="max-w-6xl mx-auto text-center text-gray-500">
+            <p class="mb-2">© 2025 AI Dev Experience. Compartiendo conocimiento sobre desarrollo con IA.</p>
+            <p class="text-sm">Construido con pasión por la tecnología y la educación</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
 </body>
 </html>
