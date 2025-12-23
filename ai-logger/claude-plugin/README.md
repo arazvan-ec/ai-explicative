@@ -1,176 +1,126 @@
-# AI Logger - Plugin Nativo para Claude Code
+# AI Logger - Plugin para Claude Code
 
-Plugin que se integra directamente con Claude Code usando slash commands, MCP server y hooks.
+Plugin que documenta tus experiencias con Claude Code y genera diarios/artículos.
 
-## Instalación Rápida
+## Instalación
+
+### Para Claude Code Web 🌐
+
+```bash
+cd ai-logger/claude-plugin
+./install-web.sh
+```
+
+Instala solo los **slash commands** (100% compatible con web).
+
+### Para Claude Code CLI 💻
 
 ```bash
 cd ai-logger/claude-plugin
 ./install.sh
 ```
 
-Esto instala:
-- ✅ Slash commands (`/diary`, `/article`, `/log`, `/stats`)
-- ✅ MCP Server con herramientas nativas
-- ✅ Hooks para captura automática
+Instala todo: slash commands + MCP server + hooks de captura automática.
+
+---
+
+## Comparativa Web vs CLI
+
+| Característica | Web | CLI |
+|----------------|-----|-----|
+| `/diary` | ✅ | ✅ |
+| `/article` | ✅ | ✅ |
+| `/log` | ✅ | ✅ |
+| `/stats` | ✅ | ✅ |
+| `/setup` | ✅ | ✅ |
+| MCP tools | ❌ | ✅ |
+| Auto-captura (hooks) | ❌ | ✅ |
+
+---
 
 ## Uso
 
 ### Slash Commands
 
-Después de instalar, puedes usar estos comandos en cualquier sesión de Claude Code:
-
 ```
+/setup              # Configura el entorno (ejecutar al inicio en web)
 /diary              # Genera resumen de tu sesión actual
 /article debugging  # Crea artículo sobre debugging
 /log "Aprendí X"    # Guarda una nota rápida
-/stats week         # Estadísticas de la semana
+/stats              # Muestra estadísticas
 ```
 
-### Herramientas MCP
+### Flujo de Trabajo Recomendado
 
-El MCP server proporciona herramientas que Claude puede usar automáticamente:
+**En Claude Code Web:**
+```
+1. /setup                    # Al iniciar
+2. [trabajar normalmente]
+3. /log "nota interesante"   # Durante la sesión
+4. /diary                    # Al terminar
+5. /article mi-tema          # Si hay algo para blog
+```
 
-| Herramienta | Descripción |
-|-------------|-------------|
-| `save_interaction` | Guarda una interacción en el log |
-| `save_note` | Guarda una nota o reflexión |
-| `get_stats` | Obtiene estadísticas de uso |
-| `get_logs` | Lee los logs de interacciones |
-| `list_diaries` | Lista los diarios generados |
-| `list_articles` | Lista los artículos generados |
+**En Claude Code CLI:**
+```
+1. [trabajar normalmente]    # Captura automática con hooks
+2. /diary                    # Al terminar
+3. /article mi-tema          # Para blog
+```
 
-### Captura Automática (Hooks)
-
-Los hooks capturan automáticamente:
-
-- **PostToolUse**: Cada herramienta que usas (Edit, Bash, Read, etc.)
-- **SessionEnd**: Resumen y transcript de cada sesión
+---
 
 ## Estructura de Archivos
 
 ```
 ~/.ai-logger/
-├── logs/
-│   └── interactions-YYYY-MM-DD.jsonl   # Interacciones automáticas
-├── notes/
-│   └── notes-YYYY-MM-DD.md             # Notas con /log
-├── diary/
-│   └── diary-YYYY-MM-DD.md             # Diarios con /diary
-├── articles/
-│   └── draft-*.md                      # Artículos con /article
-└── sessions/
-    ├── session-{id}.json               # Metadata de sesión
-    └── session-{id}.md                 # Transcript
+├── diary/                    # Diarios generados
+│   └── diary-YYYY-MM-DD.md
+├── articles/                 # Artículos para blog
+│   └── draft-*.md
+├── notes/                    # Notas rápidas
+│   └── notes-YYYY-MM-DD.md
+├── logs/                     # Logs de interacciones (solo CLI)
+│   └── interactions-*.jsonl
+└── sessions/                 # Transcripts (solo CLI)
 
 ~/.claude/
-├── commands/
-│   ├── diary.md
-│   ├── article.md
-│   ├── log.md
-│   └── stats.md
-└── settings.json                       # Configuración de MCP y hooks
+└── commands/                 # Slash commands instalados
+    ├── setup.md
+    ├── diary.md
+    ├── article.md
+    ├── log.md
+    └── stats.md
 ```
 
-## Flujo de Trabajo
+---
 
-### Diario Diario
+## Herramientas MCP (Solo CLI)
 
-1. Trabaja normalmente con Claude Code
-2. Al terminar: `/diary`
-3. Claude analiza la sesión y genera el resumen
-4. Revisa y edita `~/.ai-logger/diary/diary-YYYY-MM-DD.md`
+El MCP server proporciona herramientas adicionales:
 
-### Crear Artículo
+| Herramienta | Descripción |
+|-------------|-------------|
+| `save_interaction` | Guarda una interacción |
+| `save_note` | Guarda una nota |
+| `get_stats` | Obtiene estadísticas |
+| `get_logs` | Lee los logs |
+| `list_diaries` | Lista diarios |
+| `list_articles` | Lista artículos |
 
-1. Después de una sesión interesante: `/article mi tema`
-2. Claude genera un borrador basado en tu experiencia
-3. Edita `~/.ai-logger/articles/draft-*.md`
-4. Publica en tu blog
-
-### Notas Rápidas
-
-Durante una sesión:
-```
-/log Descubrí que usar contexto específico mejora las respuestas
-/log Tip: siempre leer el archivo antes de editar
-```
-
-## Configuración Manual
-
-Si prefieres configurar manualmente:
-
-### 1. Slash Commands
-
-Copia los archivos `.md` a `~/.claude/commands/`
-
-### 2. MCP Server
-
-Agrega a `~/.claude/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "ai-logger": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/path/to/ai-logger/claude-plugin/mcp-server/src/index.js"]
-    }
-  }
-}
-```
-
-### 3. Hooks
-
-Agrega a `~/.claude/settings.json`:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "*",
-      "hooks": [{
-        "type": "command",
-        "command": "/path/to/hooks/post-tool-logger.sh"
-      }]
-    }],
-    "SessionEnd": [{
-      "matcher": "",
-      "hooks": [{
-        "type": "command",
-        "command": "/path/to/hooks/session-end.sh"
-      }]
-    }]
-  }
-}
-```
+---
 
 ## Desinstalar
 
 ```bash
 # Eliminar commands
-rm ~/.claude/commands/{diary,article,log,stats}.md
+rm ~/.claude/commands/{setup,diary,article,log,stats}.md
 
-# Eliminar MCP server de settings.json
-# (editar manualmente y quitar "ai-logger" de mcpServers)
-
-# Eliminar hooks de settings.json
-# (editar manualmente)
-
-# Opcional: eliminar datos
+# Eliminar datos (opcional)
 rm -rf ~/.ai-logger/
 ```
 
-## Desarrollo
-
-```bash
-# Probar MCP server
-cd claude-plugin/mcp-server
-npm install
-node src/index.js
-
-# Los slash commands son markdown, edítalos directamente
-```
+---
 
 ## Licencia
 
