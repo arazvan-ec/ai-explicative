@@ -1,0 +1,14 @@
+{
+  "name": "ai-logger-mcp",
+  "version": "1.0.0",
+  "description": "MCP Server para logging de experiencias con Claude Code",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "build": "echo 'No build needed'"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0"
+  }
+}
