@@ -54,10 +54,10 @@
                 <section class="mb-12">
                     <h2 class="text-2xl font-bold text-blue-400 mb-4">Introducción</h2>
                     <p class="text-gray-300 text-lg leading-relaxed mb-4">
-                        ¿Crees que necesitas saber programar para crear un sistema de agentes de IA? <strong class="text-yellow-400">No.</strong>
+                        ¿Cómo consigues que la IA produzca código de calidad profesional de forma consistente? La respuesta: <strong class="text-yellow-400">Spec Driven Development (SDD)</strong>.
                     </p>
                     <p class="text-gray-300 text-lg leading-relaxed">
-                        Con Claude Code y Markdown, puedes construir flujos de trabajo potentes usando solo archivos <code>.md</code>. Los "agentes" son simplemente <strong class="text-white">especificaciones bien escritas</strong>.
+                        Con Claude Code y Markdown, puedes construir un sistema de agentes especializados que produce código con la misma calidad que un equipo senior. Los "agentes" son simplemente <strong class="text-white">especificaciones bien escritas en archivos .md</strong>.
                     </p>
                 </section>
 
@@ -66,15 +66,15 @@
                     <h2 class="text-2xl font-bold text-blue-400 mb-4">¿Qué es Spec Driven Development?</h2>
                     <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-6 border border-blue-500/30">
                         <p class="text-xl text-gray-200 italic">
-                            "Primero defines QUÉ quieres, CÓMO lo quieres, y las RESTRICCIONES. Después ejecutas."
+                            "Primero defines QUÉ quieres construir, CÓMO debe funcionar, y las RESTRICCIONES. Después ejecutas."
                         </p>
                     </div>
-                    <p class="text-gray-300 mb-4">En lugar de decirle a la IA "escríbeme un artículo", le das:</p>
+                    <p class="text-gray-300 mb-4">En lugar de decirle a la IA "implementa autenticación", le das:</p>
                     <ol class="list-decimal list-inside text-gray-300 space-y-2 ml-4">
-                        <li><strong class="text-white">Especificación clara</strong> — qué debe hacer exactamente</li>
-                        <li><strong class="text-white">Formato esperado</strong> — cómo debe verse el output</li>
-                        <li><strong class="text-white">Restricciones</strong> — qué NO debe hacer</li>
-                        <li><strong class="text-white">Criterios de éxito</strong> — cómo saber si está bien</li>
+                        <li><strong class="text-white">Feature Spec</strong> — qué debe hacer el sistema exactamente</li>
+                        <li><strong class="text-white">Arquitectura esperada</strong> — cómo debe estructurarse el código</li>
+                        <li><strong class="text-white">Restricciones técnicas</strong> — qué patrones usar y cuáles evitar</li>
+                        <li><strong class="text-white">Criterios de aceptación</strong> — cómo saber si está completo</li>
                     </ol>
                 </section>
 
@@ -84,26 +84,28 @@
                     <div class="grid md:grid-cols-2 gap-4">
                         <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
                             <h3 class="text-lg font-bold text-red-400 mb-3">❌ Sin spec:</h3>
-                            <pre class="text-sm"><code>"Escribe un artículo sobre OAuth2"</code></pre>
-                            <p class="text-gray-400 mt-3 text-sm">Resultado: Artículo genérico, longitud aleatoria, sin estructura clara.</p>
+                            <pre class="text-sm"><code>"Implementa un sistema de notificaciones"</code></pre>
+                            <p class="text-gray-400 mt-3 text-sm">Resultado: Código acoplado, sin tests, arquitectura inconsistente, edge cases ignorados.</p>
                         </div>
                         <div class="bg-green-900/20 rounded-xl p-6 border border-green-500/30">
                             <h3 class="text-lg font-bold text-green-400 mb-3">✅ Con spec:</h3>
-                            <pre class="text-sm"><code>Escribe un artículo técnico sobre OAuth2.
+                            <pre class="text-sm"><code># Feature: Sistema de Notificaciones
 
-AUDIENCIA: Desarrolladores backend junior
-LONGITUD: 1500-2000 palabras
-ESTRUCTURA:
-- Título atractivo
-- Introducción con gancho
-- Ejemplo práctico con código
-- Errores comunes
-- Conclusión
+REQUISITOS:
+- Notificar cuando hay nuevo comentario
+- Email si user.email_notifications=true
+- Push si tiene app instalada
+- NO notificar comentarios propios
 
 RESTRICCIONES:
-- No asumir conocimiento previo
-- Citar fuentes si usas estadísticas</code></pre>
-                            <p class="text-gray-400 mt-3 text-sm">Resultado: Exactamente lo que necesitas.</p>
+- Máximo 1 email/hora (digest)
+- Soft delete, no hard delete
+- Event-driven architecture
+
+CRITERIOS:
+- Latencia < 30 segundos
+- 100% test coverage en domain</code></pre>
+                            <p class="text-gray-400 mt-3 text-sm">Resultado: Exactamente lo que necesitas, testeado y documentado.</p>
                         </div>
                     </div>
                 </section>
@@ -114,90 +116,69 @@ RESTRICCIONES:
                     <p class="text-gray-300 mb-4">Un "agente" no es más que un archivo <code>.md</code> con instrucciones específicas. En Claude Code, estos son <strong class="text-white">slash commands</strong>.</p>
                     <pre><code>---
 description: Qué hace este agente (una línea)
-allowed-tools: Herramientas que puede usar
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
 # Rol
-[Quién es este agente]
+[Especialidad de este agente - ej: "Arquitecto de software senior"]
 
 # Objetivo
-[Qué debe lograr]
+[Qué debe lograr - ej: "Diseñar la arquitectura antes de implementar"]
 
-# Instrucciones
-[Pasos específicos]
+# Proceso
+[Pasos específicos que debe seguir]
 
 # Formato de Output
-[Cómo debe verse el resultado]
+[Estructura exacta del resultado - archivos, ubicación, formato]
 
 # Restricciones
-[Qué NO hacer]
+[Qué NO hacer - ej: "NO escribir código de implementación"]
 
 # Criterios de Éxito
-[Cómo saber si está bien]</code></pre>
+[Checklist verificable]</code></pre>
                 </section>
 
-                <!-- Sistema de Artículos -->
+                <!-- Feature Spec Example -->
                 <section class="mb-12">
-                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Caso de Uso: Sistema para Crear Artículos</h2>
-                    <p class="text-gray-300 mb-4">4 "agentes" (archivos .md) que trabajan juntos:</p>
-                    <div class="bg-gray-800 rounded-xl p-6 font-mono text-sm mb-6">
-                        <pre class="text-gray-300">~/.claude/commands/
-├── research.md      # Agente Investigador
-├── write.md         # Agente Escritor
-├── review.md        # Agente Revisor
-└── publish.md       # Agente Publicador</pre>
-                    </div>
-
-                    <div class="grid md:grid-cols-2 gap-4 mb-6">
-                        <div class="bg-gray-800 rounded-xl p-5 border border-blue-500/30">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="text-2xl">🔍</span>
-                                <h3 class="font-bold text-blue-400">Investigador</h3>
-                            </div>
-                            <p class="text-gray-400 text-sm">Busca información, extrae puntos clave, compila notas con fuentes citadas.</p>
-                        </div>
-                        <div class="bg-gray-800 rounded-xl p-5 border border-green-500/30">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="text-2xl">✍️</span>
-                                <h3 class="font-bold text-green-400">Escritor</h3>
-                            </div>
-                            <p class="text-gray-400 text-sm">Transforma la investigación en artículos claros con estructura lógica.</p>
-                        </div>
-                        <div class="bg-gray-800 rounded-xl p-5 border border-purple-500/30">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="text-2xl">📝</span>
-                                <h3 class="font-bold text-purple-400">Revisor</h3>
-                            </div>
-                            <p class="text-gray-400 text-sm">Evalúa con checklist, genera feedback específico, aplica correcciones menores.</p>
-                        </div>
-                        <div class="bg-gray-800 rounded-xl p-5 border border-orange-500/30">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="text-2xl">🚀</span>
-                                <h3 class="font-bold text-orange-400">Publicador</h3>
-                            </div>
-                            <p class="text-gray-400 text-sm">Verifica aprobación, mueve a producción, actualiza índice, commit.</p>
-                        </div>
-                    </div>
-
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Ejemplo: Feature Spec para Desarrollo</h2>
+                    <p class="text-gray-300 mb-4">Todo empieza con una <strong class="text-white">Feature Spec</strong> — el documento que define qué construir:</p>
                     <div class="bg-gray-800 rounded-xl p-6">
-                        <h3 class="font-bold text-white mb-4">Flujo completo:</h3>
-                        <pre class="text-gray-300 text-sm"><code>/research OAuth2 para principiantes
-    ↓ [Genera: research-oauth2-2025-12-24.md]
-/write OAuth2 para principiantes
-    ↓ [Genera: draft-2025-12-24-oauth2.md]
-/review
-    ↓ [Genera: review-2025-12-24.md + correcciones]
-/publish oauth2
-    ↓ [Mueve a articles/ + commit]</code></pre>
-                        <p class="text-yellow-400 font-semibold mt-4 text-center">4 comandos. Artículo publicado.</p>
+                        <pre class="text-gray-300 text-sm"><code># Feature: Sistema de Notificaciones
+
+## Descripción
+Los usuarios deben recibir notificaciones cuando alguien
+comenta en sus posts.
+
+## Requisitos Funcionales
+- [ ] Notificación cuando hay nuevo comentario
+- [ ] Email si el usuario tiene email_notifications=true
+- [ ] Push notification si tiene app instalada
+- [ ] NO notificar comentarios propios
+
+## Restricciones Técnicas
+- Máximo 1 email por hora (digest)
+- Notificaciones se pueden marcar como leídas
+- Soft delete, no hard delete
+- Event-driven: usar domain events
+
+## Stack
+- Backend: Symfony 7.x
+- Queue: Messenger + Redis
+- Database: PostgreSQL
+
+## Criterios de Aceptación
+- Usuario recibe notificación en < 30 segundos
+- Email incluye preview del comentario
+- Push incluye deep link al comentario
+- 100% test coverage en capa de dominio</code></pre>
                     </div>
                 </section>
 
-                <!-- Sistema de Desarrollo -->
+                <!-- Sistema de Agentes -->
                 <section class="mb-12">
-                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Agentes Especializados para Desarrollo de Software</h2>
+                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Sistema de Agentes Especializados</h2>
                     <p class="text-gray-300 mb-6">
-                        En lugar de un agente genérico que "hace todo", creamos <strong class="text-white">especialistas</strong>:
+                        En lugar de un agente genérico que "hace todo", creamos <strong class="text-white">especialistas</strong> que trabajan en secuencia:
                     </p>
 
                     <div class="bg-gray-800 rounded-xl p-6 font-mono text-sm mb-6 overflow-x-auto">
@@ -208,14 +189,14 @@ allowed-tools: Herramientas que puede usar
                           │
                           ▼
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-│  ARQUITECTO │ → │   DOMAIN    │ → │   SYMFONY   │
+│  ARQUITECTO │ → │   DOMAIN    │ → │  FRAMEWORK  │
 │             │   │   EXPERT    │   │   EXPERT    │
 └─────────────┘   └─────────────┘   └─────────────┘
                           │
                           ▼
               ┌─────────────────────┐
-              │   TEST EXPERT       │
-              │  (TDD obligatorio)  │
+              │     TDD EXPERT      │
+              │  (Tests primero!)   │
               └─────────────────────┘
                           │
                           ▼
@@ -224,135 +205,247 @@ allowed-tools: Herramientas que puede usar
               └─────────────────────┘</pre>
                     </div>
 
+                    <div class="bg-gray-800 rounded-xl p-6 font-mono text-sm mb-6">
+                        <pre class="text-gray-300">~/.claude/commands/
+├── architect.md       # Diseña arquitectura
+├── domain.md          # Valida lógica de negocio (DDD)
+├── implement.md       # Implementa con best practices
+├── tdd.md             # Tests primero, siempre
+└── review.md          # Code review en dos fases</pre>
+                    </div>
+                </section>
+
+                <!-- Agentes Detallados -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Los 5 Agentes del Sistema</h2>
+
                     <!-- Agentes de desarrollo -->
                     <div class="space-y-6">
                         <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-blue-500">
                             <h3 class="text-xl font-bold text-blue-400 mb-3">🏗️ Arquitecto</h3>
                             <p class="text-gray-300 mb-3">Diseña ANTES de implementar. Explora alternativas con trade-offs.</p>
+                            <div class="bg-gray-900/50 rounded-lg p-4 mb-4">
+                                <p class="text-sm text-gray-400 mb-2">Comando: <code>/architect Sistema de Notificaciones</code></p>
+                            </div>
                             <ul class="text-gray-400 text-sm space-y-1">
-                                <li>• Entiende el contexto del proyecto</li>
-                                <li>• Presenta 2-3 opciones con pros/contras</li>
+                                <li>• Entiende el contexto y examina código existente</li>
+                                <li>• Presenta 2-3 opciones arquitectónicas con pros/contras</li>
                                 <li>• Documenta decisiones y justificaciones</li>
-                                <li>• <strong class="text-red-400">NO escribe código de implementación</strong></li>
+                                <li>• Output: <code>docs/designs/YYYY-MM-DD-feature-design.md</code></li>
                             </ul>
+                            <div class="mt-4 bg-red-900/20 rounded-lg p-3 border border-red-500/30">
+                                <p class="text-sm text-red-400"><strong>RESTRICCIÓN:</strong> NO escribe código de implementación</p>
+                            </div>
                         </div>
 
                         <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-green-500">
                             <h3 class="text-xl font-bold text-green-400 mb-3">🎯 Domain Expert</h3>
-                            <p class="text-gray-300 mb-3">Valida lógica de negocio con DDD (Domain-Driven Design).</p>
+                            <p class="text-gray-300 mb-3">Valida lógica de negocio usando Domain-Driven Design (DDD).</p>
+                            <div class="bg-gray-900/50 rounded-lg p-4 mb-4">
+                                <p class="text-sm text-gray-400 mb-2">Comando: <code>/domain Notificaciones</code></p>
+                            </div>
                             <ul class="text-gray-400 text-sm space-y-1">
-                                <li>• Identifica Entidades y Value Objects</li>
-                                <li>• Define Agregados e invariantes</li>
-                                <li>• Documenta reglas de negocio</li>
-                                <li>• Establece el Ubiquitous Language</li>
+                                <li>• Identifica <strong class="text-white">Entidades</strong> (tienen identidad) vs <strong class="text-white">Value Objects</strong> (inmutables)</li>
+                                <li>• Define <strong class="text-white">Agregados</strong> e invariantes que deben proteger</li>
+                                <li>• Documenta <strong class="text-white">Reglas de Negocio</strong> con condiciones y excepciones</li>
+                                <li>• Establece el <strong class="text-white">Ubiquitous Language</strong> del dominio</li>
                             </ul>
+                            <div class="mt-4 bg-gray-900/50 rounded-lg p-3">
+                                <p class="text-sm text-gray-300"><strong>Output ejemplo:</strong></p>
+                                <pre class="text-xs mt-2"><code>Entidades: Notification, NotificationPreference
+Value Objects: NotificationChannel, NotificationContent
+Reglas: "No self-notify", "Hourly email digest"</code></pre>
+                            </div>
                         </div>
 
                         <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-purple-500">
-                            <h3 class="text-xl font-bold text-purple-400 mb-3">⚙️ Framework Expert (Symfony)</h3>
-                            <p class="text-gray-300 mb-3">Implementa siguiendo best practices del framework.</p>
+                            <h3 class="text-xl font-bold text-purple-400 mb-3">⚙️ Framework Expert</h3>
+                            <p class="text-gray-300 mb-3">Implementa siguiendo best practices del framework elegido.</p>
+                            <div class="bg-gray-900/50 rounded-lg p-4 mb-4">
+                                <p class="text-sm text-gray-400 mb-2">Comando: <code>/implement Notificaciones</code></p>
+                            </div>
                             <ul class="text-gray-400 text-sm space-y-1">
-                                <li>• Controllers delgados (máx 20 líneas)</li>
-                                <li>• Repository pattern para queries</li>
-                                <li>• Events para side-effects</li>
-                                <li>• <strong class="text-yellow-400">OBLIGATORIO: Usar /tdd para cada componente</strong></li>
+                                <li>• Lee el diseño aprobado de <code>docs/designs/</code></li>
+                                <li>• Controllers delgados (máx 20 líneas por acción)</li>
+                                <li>• Repository pattern para queries a BD</li>
+                                <li>• Domain Events para side-effects</li>
+                                <li>• DTOs para entrada/salida de APIs</li>
                             </ul>
+                            <div class="mt-4 bg-yellow-900/20 rounded-lg p-3 border border-yellow-500/30">
+                                <p class="text-sm text-yellow-400"><strong>OBLIGATORIO:</strong> Usar <code>/tdd</code> para cada componente</p>
+                            </div>
                         </div>
 
                         <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-red-500">
                             <h3 class="text-xl font-bold text-red-400 mb-3">🔬 TDD Expert</h3>
                             <p class="text-gray-300 mb-3">Mantra: <em>"NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST"</em></p>
-                            <div class="flex gap-4 mt-4 flex-wrap">
-                                <div class="bg-red-900/30 px-4 py-2 rounded-lg">
-                                    <span class="text-red-400 font-bold">🔴 RED</span>
-                                    <p class="text-xs text-gray-400">Test que falla</p>
+                            <div class="bg-gray-900/50 rounded-lg p-4 mb-4">
+                                <p class="text-sm text-gray-400 mb-2">Comando: <code>/tdd NotificationService</code></p>
+                            </div>
+                            <div class="flex gap-4 mt-4 flex-wrap justify-center">
+                                <div class="bg-red-900/30 px-4 py-3 rounded-lg text-center">
+                                    <span class="text-red-400 font-bold text-lg">🔴 RED</span>
+                                    <p class="text-xs text-gray-400 mt-1">Escribe test que falla</p>
                                 </div>
-                                <span class="text-gray-500 self-center">→</span>
-                                <div class="bg-green-900/30 px-4 py-2 rounded-lg">
-                                    <span class="text-green-400 font-bold">🟢 GREEN</span>
-                                    <p class="text-xs text-gray-400">Código mínimo</p>
+                                <span class="text-gray-500 self-center text-2xl">→</span>
+                                <div class="bg-green-900/30 px-4 py-3 rounded-lg text-center">
+                                    <span class="text-green-400 font-bold text-lg">🟢 GREEN</span>
+                                    <p class="text-xs text-gray-400 mt-1">Código mínimo para pasar</p>
                                 </div>
-                                <span class="text-gray-500 self-center">→</span>
-                                <div class="bg-blue-900/30 px-4 py-2 rounded-lg">
-                                    <span class="text-blue-400 font-bold">🔄 REFACTOR</span>
-                                    <p class="text-xs text-gray-400">Limpiar</p>
+                                <span class="text-gray-500 self-center text-2xl">→</span>
+                                <div class="bg-blue-900/30 px-4 py-3 rounded-lg text-center">
+                                    <span class="text-blue-400 font-bold text-lg">🔄 REFACTOR</span>
+                                    <p class="text-xs text-gray-400 mt-1">Limpiar sin cambiar behavior</p>
                                 </div>
+                            </div>
+                            <div class="mt-6 bg-gray-900/50 rounded-lg p-4">
+                                <p class="text-sm text-gray-300 mb-2"><strong>Ejemplo de ciclo:</strong></p>
+                                <pre class="text-xs"><code>// 🔴 RED: Test que falla
+public function test_no_notifica_comentarios_propios(): void
+{
+    $user = new User(id: 1);
+    $comment = new Comment(authorId: 1, postOwnerId: 1);
+
+    $result = $this->service->shouldNotify($user, $comment);
+
+    $this->assertFalse($result);
+}
+
+// 🟢 GREEN: Código mínimo
+public function shouldNotify(User $user, Comment $comment): bool
+{
+    return $user->id !== $comment->authorId;
+}
+
+// 🔄 REFACTOR: Extraer a Value Object si hay más reglas</code></pre>
                             </div>
                         </div>
 
                         <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-yellow-500">
                             <h3 class="text-xl font-bold text-yellow-400 mb-3">👁️ Code Reviewer</h3>
-                            <p class="text-gray-300 mb-3">Dos fases de revisión:</p>
+                            <p class="text-gray-300 mb-3">Revisión en dos fases obligatorias:</p>
+                            <div class="bg-gray-900/50 rounded-lg p-4 mb-4">
+                                <p class="text-sm text-gray-400 mb-2">Comando: <code>/review Notificaciones</code></p>
+                            </div>
                             <div class="grid md:grid-cols-2 gap-4 mt-4">
                                 <div class="bg-gray-900/50 p-4 rounded-lg">
                                     <h4 class="font-semibold text-white mb-2">Fase 1: Spec Compliance</h4>
-                                    <p class="text-gray-400 text-sm">¿El código cumple con la spec? Si falla → STOP.</p>
+                                    <ul class="text-gray-400 text-sm space-y-1">
+                                        <li>• ¿Implementa TODOS los requisitos?</li>
+                                        <li>• ¿Respeta las restricciones?</li>
+                                        <li>• ¿Maneja los edge cases?</li>
+                                    </ul>
+                                    <p class="text-red-400 text-sm mt-2"><strong>Si falla → STOP</strong></p>
                                 </div>
                                 <div class="bg-gray-900/50 p-4 rounded-lg">
                                     <h4 class="font-semibold text-white mb-2">Fase 2: Code Quality</h4>
-                                    <p class="text-gray-400 text-sm">Legibilidad, mantenibilidad, robustez, tests.</p>
+                                    <ul class="text-gray-400 text-sm space-y-1">
+                                        <li>• Legibilidad y nombres</li>
+                                        <li>• Single Responsibility</li>
+                                        <li>• Test coverage</li>
+                                        <li>• Sin vulnerabilidades</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                <!-- Flujo Completo -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-green-400 mb-4">Flujo Completo de Desarrollo</h2>
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <pre class="text-gray-300 text-sm"><code>/architect Sistema de Notificaciones
+    ↓ [Genera: docs/designs/2025-12-24-notifications-design.md]
+    ↓ [Presenta 3 opciones, recomienda Event-Driven]
+
+/domain Notificaciones
+    ↓ [Valida entidades: Notification, NotificationPreference]
+    ↓ [Documenta reglas: "no self-notify", "hourly digest"]
+
+/implement Notificaciones
+    ↓ [Crea estructura siguiendo el diseño]
+    ↓ [Usa /tdd para cada componente]
+
+/tdd NotificationService
+    ↓ [🔴 test_no_notifica_comentarios_propios → FAIL]
+    ↓ [🟢 Implementa shouldNotify() → PASS]
+    ↓ [🔄 Refactor si necesario]
+
+/tdd EmailNotificationHandler
+    ↓ [🔴 test_respeta_limite_horario → FAIL]
+    ↓ [🟢 Implementa digest logic → PASS]
+
+/review Notificaciones
+    ↓ [Fase 1: Spec Compliance ✅]
+    ↓ [Fase 2: Code Quality 9/10]
+    ↓ [Veredicto: Aprobar]</code></pre>
+                        <p class="text-yellow-400 font-semibold mt-6 text-center text-lg">
+                            Feature completa. Testeada. Documentada. Lista para PR.
+                        </p>
+                    </div>
+                </section>
+
                 <!-- Por qué Funciona -->
                 <section class="mb-12">
-                    <h2 class="text-2xl font-bold text-green-400 mb-4">Por qué Funciona</h2>
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Por qué Funciona</h2>
                     <div class="grid md:grid-cols-2 gap-4">
                         <div class="bg-gray-800 rounded-xl p-5">
                             <h3 class="font-bold text-white mb-2">1. Separación de Concerns</h3>
-                            <p class="text-gray-400 text-sm">El arquitecto diseña, no implementa. El domain expert valida negocio, no código.</p>
+                            <p class="text-gray-400 text-sm">El arquitecto diseña, no implementa. El domain expert valida negocio, no código. Cada agente tiene UN trabajo.</p>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-5">
                             <h3 class="font-bold text-white mb-2">2. Checks Múltiples</h3>
-                            <p class="text-gray-400 text-sm">Diseño → Dominio → Implementación → Tests → Code review en dos fases.</p>
+                            <p class="text-gray-400 text-sm">Diseño → Dominio → Implementación → Tests → Code review. Errores se detectan temprano.</p>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-5">
                             <h3 class="font-bold text-white mb-2">3. Documentación Automática</h3>
-                            <p class="text-gray-400 text-sm">Cada agente genera documentos. Historial de decisiones preservado.</p>
+                            <p class="text-gray-400 text-sm">Cada agente genera documentos. El historial de decisiones arquitectónicas queda preservado.</p>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-5">
                             <h3 class="font-bold text-white mb-2">4. Calidad Consistente</h3>
-                            <p class="text-gray-400 text-sm">Mismos estándares siempre. Sin "atajos" por prisa. TDD obligatorio.</p>
+                            <p class="text-gray-400 text-sm">Mismos estándares siempre. Sin "atajos" por prisa. TDD es obligatorio, no opcional.</p>
                         </div>
                     </div>
                 </section>
 
                 <!-- Tips para Buenas Specs -->
                 <section class="mb-12">
-                    <h2 class="text-2xl font-bold text-purple-400 mb-4">Tips para Escribir Buenas Specs</h2>
+                    <h2 class="text-2xl font-bold text-purple-400 mb-4">Tips para Escribir Buenas Feature Specs</h2>
                     <div class="space-y-4">
                         <div class="bg-gray-800 rounded-lg p-5">
-                            <h3 class="font-semibold text-green-400 mb-2">✅ Sé Específico</h3>
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Sé Específico en Requisitos</h3>
                             <div class="grid md:grid-cols-2 gap-4 text-sm">
-                                <div class="bg-red-900/20 p-3 rounded"><code class="text-red-400">"Escribe un buen artículo"</code></div>
-                                <div class="bg-green-900/20 p-3 rounded"><code class="text-green-400">"Artículo de 1500-2000 palabras, 4-5 secciones, para devs junior"</code></div>
+                                <div class="bg-red-900/20 p-3 rounded"><code class="text-red-400">"Implementa notificaciones"</code></div>
+                                <div class="bg-green-900/20 p-3 rounded"><code class="text-green-400">"Notificar por email Y push cuando comentan en posts del usuario, excepto comentarios propios"</code></div>
                             </div>
                         </div>
                         <div class="bg-gray-800 rounded-lg p-5">
-                            <h3 class="font-semibold text-green-400 mb-2">✅ Define el Output Exacto</h3>
-                            <div class="grid md:grid-cols-2 gap-4 text-sm">
-                                <div class="bg-red-900/20 p-3 rounded"><code class="text-red-400">"Guarda el resultado"</code></div>
-                                <div class="bg-green-900/20 p-3 rounded"><code class="text-green-400">"Guarda en: data/articles/[fecha]-[slug].md con formato YAML frontmatter"</code></div>
-                            </div>
-                        </div>
-                        <div class="bg-gray-800 rounded-lg p-5">
-                            <h3 class="font-semibold text-green-400 mb-2">✅ Lista Restricciones</h3>
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Define Restricciones Técnicas</h3>
                             <pre class="text-sm mt-2"><code># RESTRICCIONES
-- NO inventar estadísticas
-- NO exceder 2500 palabras
-- NO usar jerga sin explicar
-- Máximo 4 oraciones por párrafo</code></pre>
+- Event-driven architecture (no llamadas síncronas)
+- Repository pattern para acceso a datos
+- Domain Events para side-effects
+- NO lógica de negocio en Controllers
+- NO queries directas en servicios de dominio</code></pre>
                         </div>
                         <div class="bg-gray-800 rounded-lg p-5">
-                            <h3 class="font-semibold text-green-400 mb-2">✅ Incluye Criterios de Éxito</h3>
-                            <pre class="text-sm mt-2"><code># CRITERIOS DE ÉXITO
-- [ ] Título menor a 60 caracteres
-- [ ] Introducción engancha en 2 oraciones
-- [ ] Al menos 3 fuentes citadas
-- [ ] Código con syntax highlighting</code></pre>
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Especifica Criterios de Aceptación</h3>
+                            <pre class="text-sm mt-2"><code># CRITERIOS DE ACEPTACIÓN
+- [ ] Latencia de notificación < 30 segundos
+- [ ] 100% test coverage en capa de dominio
+- [ ] Mínimo 80% coverage total
+- [ ] Zero vulnerabilidades en security scan
+- [ ] Documentación de API actualizada</code></pre>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-5">
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Incluye Edge Cases</h3>
+                            <pre class="text-sm mt-2"><code># EDGE CASES A MANEJAR
+- Usuario sin email configurado
+- Usuario con notificaciones deshabilitadas
+- Post eliminado antes de enviar notificación
+- Múltiples comentarios en < 1 minuto (batching)
+- Fallo de servicio de email (retry con backoff)</code></pre>
                         </div>
                     </div>
                 </section>
@@ -361,20 +454,20 @@ allowed-tools: Herramientas que puede usar
                 <section class="mb-12 bg-gradient-to-r from-orange-900/50 to-purple-900/50 rounded-xl p-6 border border-orange-500/30">
                     <h2 class="text-2xl font-bold text-orange-400 mb-4">Conclusión</h2>
                     <p class="text-gray-300 mb-4">
-                        No necesitas TypeScript, Python, ni frameworks complejos para crear un sistema de agentes profesional.
+                        No necesitas frameworks complejos para crear un sistema de agentes que produce código de calidad profesional.
                     </p>
-                    <p class="text-gray-300 mb-6">Con Claude Code + Markdown:</p>
+                    <p class="text-gray-300 mb-6">Con Claude Code + Specs en Markdown:</p>
                     <ol class="list-decimal list-inside text-gray-300 space-y-2 mb-6">
-                        <li><strong class="text-white">Define specs claras</strong> en archivos <code>.md</code></li>
-                        <li><strong class="text-white">Crea agentes especializados</strong> — arquitecto, domain expert, framework expert, TDD expert, reviewer</li>
-                        <li><strong class="text-white">Usa slash commands</strong> para ejecutar cada agente</li>
-                        <li><strong class="text-white">Los outputs alimentan</strong> al siguiente agente</li>
-                        <li><strong class="text-white">El resultado es predecible</strong>, consistente, y de alta calidad</li>
+                        <li><strong class="text-white">Escribe Feature Specs claras</strong> con requisitos, restricciones y criterios</li>
+                        <li><strong class="text-white">Crea agentes especializados</strong> — arquitecto, domain, framework, TDD, reviewer</li>
+                        <li><strong class="text-white">Ejecuta en secuencia</strong> — cada agente alimenta al siguiente</li>
+                        <li><strong class="text-white">TDD obligatorio</strong> — no hay código sin test que falle primero</li>
+                        <li><strong class="text-white">Review en dos fases</strong> — spec compliance + code quality</li>
                     </ol>
 
                     <div class="bg-gray-900/50 rounded-lg p-4 text-center">
                         <p class="text-xl font-bold text-yellow-400">
-                            Feature Spec + Agentes Especializados + TDD Obligatorio = Código de Calidad
+                            Feature Spec + Agentes Especializados + TDD = Código de Calidad Profesional
                         </p>
                     </div>
                 </section>
@@ -387,6 +480,7 @@ allowed-tools: Herramientas que puede usar
                             <thead>
                                 <tr class="border-b border-gray-700">
                                     <th class="py-3 px-4 text-blue-400">Agente</th>
+                                    <th class="py-3 px-4 text-blue-400">Comando</th>
                                     <th class="py-3 px-4 text-blue-400">Responsabilidad</th>
                                     <th class="py-3 px-4 text-blue-400">Output</th>
                                 </tr>
@@ -394,26 +488,31 @@ allowed-tools: Herramientas que puede usar
                             <tbody class="text-gray-300">
                                 <tr class="border-b border-gray-800">
                                     <td class="py-3 px-4">Arquitecto</td>
+                                    <td class="py-3 px-4"><code>/architect</code></td>
                                     <td class="py-3 px-4">Diseñar antes de implementar</td>
                                     <td class="py-3 px-4"><code>docs/designs/*.md</code></td>
                                 </tr>
                                 <tr class="border-b border-gray-800">
                                     <td class="py-3 px-4">Domain Expert</td>
+                                    <td class="py-3 px-4"><code>/domain</code></td>
                                     <td class="py-3 px-4">Validar lógica de negocio</td>
-                                    <td class="py-3 px-4">Modelo de dominio documentado</td>
+                                    <td class="py-3 px-4">Modelo de dominio</td>
                                 </tr>
                                 <tr class="border-b border-gray-800">
                                     <td class="py-3 px-4">Framework Expert</td>
+                                    <td class="py-3 px-4"><code>/implement</code></td>
                                     <td class="py-3 px-4">Implementar con best practices</td>
                                     <td class="py-3 px-4">Código estructurado</td>
                                 </tr>
                                 <tr class="border-b border-gray-800">
                                     <td class="py-3 px-4">TDD Expert</td>
+                                    <td class="py-3 px-4"><code>/tdd</code></td>
                                     <td class="py-3 px-4">Tests primero, siempre</td>
-                                    <td class="py-3 px-4">Código con 100% cobertura</td>
+                                    <td class="py-3 px-4">Tests + implementación</td>
                                 </tr>
                                 <tr>
                                     <td class="py-3 px-4">Code Reviewer</td>
+                                    <td class="py-3 px-4"><code>/review</code></td>
                                     <td class="py-3 px-4">Verificar spec + calidad</td>
                                     <td class="py-3 px-4">Feedback accionable</td>
                                 </tr>
@@ -424,13 +523,13 @@ allowed-tools: Herramientas que puede usar
 
                 <section class="text-center">
                     <p class="text-xl text-gray-300">
-                        Spec Driven Development es <strong class="text-white">escribir bien lo que quieres</strong>.
+                        Spec Driven Development es <strong class="text-white">definir claramente qué construir</strong>.
                     </p>
                     <p class="text-xl text-gray-300 mb-6">
                         Los agentes especializados aseguran que <strong class="text-white">cada paso se hace correctamente</strong>.
                     </p>
                     <p class="text-2xl font-bold text-yellow-400">
-                        El código es opcional. La calidad no.
+                        La spec es el contrato. Los agentes lo ejecutan.
                     </p>
                 </section>
             </div>
