@@ -8,7 +8,15 @@
       "preview": "Creamos un sistema completo de logging para documentar experiencias con Claude Code: un plugin con slash commands, MCP server y hooks que captura interacciones y genera diarios/artículos automáticamen"
     }
   ],
-  "articles": [],
+  "articles": [
+    {
+      "id": "draft-2025-12-24-creando-plugin-ai-logger",
+      "title": "Cómo Creé un Plugin para Documentar mi Experiencia con Claude Code",
+      "date": "2025-12-24",
+      "file": "draft-2025-12-24-creando-plugin-ai-logger.md",
+      "preview": "title: \"Cómo Creé un Plugin para Documentar mi Experiencia con Claude Code\""
+    }
+  ],
   "notes": [],
-  "lastUpdated": "2025-12-24T00:14:55.242Z"
+  "lastUpdated": "2025-12-24T00:17:43.815Z"
 }
