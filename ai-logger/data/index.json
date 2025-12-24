@@ -15,8 +15,15 @@
       "date": "2025-12-24",
       "file": "draft-2025-12-24-creando-plugin-ai-logger.md",
       "preview": "title: \"Cómo Creé un Plugin para Documentar mi Experiencia con Claude Code\""
+    },
+    {
+      "id": "draft-2025-12-24-sistema-agentes-spec-driven",
+      "title": "Cómo Construir un Sistema de Agentes con Spec Driven Development",
+      "date": "2025-12-24",
+      "file": "draft-2025-12-24-sistema-agentes-spec-driven.md",
+      "preview": "title: \"Cómo Construir un Sistema de Agentes con Spec Driven Development\""
     }
   ],
   "notes": [],
-  "lastUpdated": "2025-12-24T00:31:21.542Z"
+  "lastUpdated": "2025-12-24T22:01:45.841Z"
 }
