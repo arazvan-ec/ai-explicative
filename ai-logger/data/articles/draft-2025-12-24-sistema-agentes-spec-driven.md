@@ -2,7 +2,7 @@
 title: "Cómo Construir un Sistema de Agentes con Spec Driven Development"
 date: 2025-12-24
 category: architecture
-tags: [agentes, spec-driven-development, ia, arquitectura, cms, claude-code]
+tags: [agentes, spec-driven-development, ia, claude-code, markdown]
 draft: false
 ---
 
@@ -10,550 +10,509 @@ draft: false
 
 ## Introducción
 
-Los agentes de IA son el siguiente nivel después de los chatbots. Un agente no solo responde preguntas: **ejecuta tareas complejas de forma autónoma**.
+¿Crees que necesitas saber programar para crear un sistema de agentes de IA? **No.**
 
-Pero construir agentes sin metodología es receta para el desastre. La IA alucina, pierde contexto, y hace cosas inesperadas.
+Con Claude Code y Markdown, puedes construir flujos de trabajo potentes usando solo archivos `.md`. Los "agentes" son simplemente **especificaciones bien escritas**.
 
-La solución: **Spec Driven Development (SDD)** — definir especificaciones claras antes de que el agente ejecute cualquier cosa.
-
-En este artículo te muestro cómo construir un sistema de agentes potente usando un caso real: **crear y publicar un artículo en un CMS**.
+En este artículo te muestro cómo crear un sistema de agentes real usando **solo Markdown** — con un caso práctico: crear y publicar un artículo en un CMS.
 
 ## ¿Qué es Spec Driven Development?
 
-Spec Driven Development significa:
+Spec Driven Development (SDD) significa:
 
-> **Primero la especificación, después la ejecución.**
+> **Primero defines QUÉ quieres, CÓMO lo quieres, y las RESTRICCIONES. Después ejecutas.**
 
-En lugar de decirle al agente "crea un artículo sobre X", le das:
+En lugar de decirle a la IA "escríbeme un artículo", le das:
 
-1. **Especificación clara** de qué debe hacer
-2. **Criterios de aceptación** verificables
-3. **Restricciones** que no puede violar
-4. **Plan de ejecución** paso a paso
+1. **Especificación clara** — qué debe hacer exactamente
+2. **Formato esperado** — cómo debe verse el output
+3. **Restricciones** — qué NO debe hacer
+4. **Criterios de éxito** — cómo saber si está bien
 
-El agente sigue la spec, no improvisa.
+### Sin Spec vs Con Spec
 
-### Analogía
-
-Imagina contratar un constructor:
-
-❌ **Sin spec:** "Hazme una casa bonita"
-✅ **Con spec:** "Casa de 2 pisos, 3 habitaciones, 2 baños, estilo moderno, presupuesto X, en 6 meses"
-
-La diferencia entre caos y resultados predecibles.
-
-## Arquitectura de un Sistema de Agentes
-
-Un sistema de agentes potente tiene estas capas:
-
+❌ **Sin spec:**
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    ORQUESTADOR                          │
-│         (Decide qué agente usar y cuándo)               │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │   AGENTE    │  │   AGENTE    │  │   AGENTE    │     │
-│  │  PLANIFICADOR│ │  ESCRITOR   │  │  REVISOR    │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-│                                                         │
-├─────────────────────────────────────────────────────────┤
-│                    HERRAMIENTAS                         │
-│    (APIs, Base de datos, Sistema de archivos)           │
-├─────────────────────────────────────────────────────────┤
-│                      SPECS                              │
-│         (Especificaciones y restricciones)              │
-└─────────────────────────────────────────────────────────┘
+"Escribe un artículo sobre OAuth2"
 ```
+Resultado: Artículo genérico, longitud aleatoria, sin estructura clara.
 
-### Componentes Clave
+✅ **Con spec:**
+```
+Escribe un artículo técnico sobre OAuth2.
 
-| Componente | Responsabilidad |
-|------------|-----------------|
-| **Orquestador** | Coordina agentes, maneja el flujo |
-| **Agentes especializados** | Cada uno hace una cosa bien |
-| **Herramientas** | Acciones concretas (API calls, DB queries) |
-| **Specs** | Definen qué hacer y qué no hacer |
+AUDIENCIA: Desarrolladores backend junior
+LONGITUD: 1500-2000 palabras
+ESTRUCTURA:
+- Título atractivo
+- Introducción con gancho (por qué importa)
+- Sección "El Problema"
+- Sección "La Solución"
+- Ejemplo práctico con código
+- Errores comunes
+- Conclusión con siguiente paso
 
-## Caso de Uso: Crear Artículo en un CMS
+RESTRICCIONES:
+- No asumir conocimiento previo de OAuth
+- Incluir al menos un diagrama (describir en texto)
+- Citar fuentes si usas estadísticas
 
-Vamos a construir un sistema que:
-1. Recibe un tema
-2. Investiga el tema
-3. Genera un artículo
-4. Lo revisa y mejora
-5. Lo publica en el CMS
+FORMATO: Markdown con frontmatter YAML
+```
+Resultado: Exactamente lo que necesitas.
 
-### Paso 1: Definir la Spec
+## Los "Agentes" son Specs en Markdown
 
-Antes de escribir código, escribimos la especificación:
+Un "agente" no es más que un archivo `.md` con instrucciones específicas. En Claude Code, estos son **slash commands**.
 
-```yaml
-# spec/create-article.yaml
-name: create-article
-version: 1.0
-description: Crea y publica un artículo en el CMS
+### Estructura de un Agente/Spec
 
-input:
-  topic: string (required)
-  target_audience: string (optional, default: "desarrolladores")
-  word_count: number (optional, default: 1500)
-  cms_endpoint: string (required)
+```markdown
+---
+description: Qué hace este agente (una línea)
+allowed-tools: Herramientas que puede usar
+---
 
-output:
-  article_id: string
-  url: string
-  status: "published" | "draft" | "failed"
+# Rol
+[Quién es este agente]
 
-agents:
-  - name: researcher
-    role: Investigar el tema y recopilar información
-    tools: [web_search, fetch_url]
+# Objetivo
+[Qué debe lograr]
 
-  - name: writer
-    role: Escribir el artículo basándose en la investigación
-    tools: [none]
+# Instrucciones
+[Pasos específicos]
 
-  - name: reviewer
-    role: Revisar calidad, gramática y SEO
-    tools: [none]
+# Formato de Output
+[Cómo debe verse el resultado]
 
-  - name: publisher
-    role: Publicar en el CMS
-    tools: [cms_api]
+# Restricciones
+[Qué NO hacer]
 
-workflow:
-  1. researcher: Investigar tema → research_notes
-  2. writer: Escribir artículo usando research_notes → draft
-  3. reviewer: Revisar draft → reviewed_draft + feedback
-  4. writer: Aplicar feedback si necesario → final_draft
-  5. publisher: Publicar final_draft → article_id, url
-
-constraints:
-  - El artículo debe tener título, introducción, cuerpo y conclusión
-  - Mínimo 3 fuentes citadas
-  - No contenido plagiado
-  - Imágenes deben tener alt text
-  - Máximo 2 iteraciones de revisión
-
-acceptance_criteria:
-  - Artículo publicado con URL válida
-  - Score de legibilidad > 60 (Flesch)
-  - Todas las secciones presentes
-  - Al menos 1 imagen incluida
+# Criterios de Éxito
+[Cómo saber si está bien]
 ```
 
-Esta spec define **todo** antes de ejecutar. El agente no improvisa.
+## Caso de Uso: Sistema para Crear Artículos en CMS
 
-### Paso 2: Implementar el Orquestador
-
-```javascript
-// orchestrator.js
-class ArticleOrchestrator {
-  constructor(spec) {
-    this.spec = spec;
-    this.agents = this.initializeAgents();
-    this.state = {};
-  }
-
-  async execute(input) {
-    // Validar input contra spec
-    this.validateInput(input);
-
-    // Ejecutar workflow definido en spec
-    for (const step of this.spec.workflow) {
-      const agent = this.agents[step.agent];
-      const result = await agent.execute({
-        task: step.task,
-        input: this.state,
-        constraints: this.spec.constraints
-      });
-
-      // Guardar resultado en estado
-      this.state[step.output] = result;
-
-      // Verificar que no se violen constraints
-      this.checkConstraints(result);
-    }
-
-    // Verificar criterios de aceptación
-    this.verifyAcceptanceCriteria();
-
-    return this.state.final_output;
-  }
-
-  validateInput(input) {
-    for (const [key, type] of Object.entries(this.spec.input)) {
-      if (type.includes('required') && !input[key]) {
-        throw new Error(`Missing required input: ${key}`);
-      }
-    }
-  }
-
-  checkConstraints(result) {
-    for (const constraint of this.spec.constraints) {
-      if (!this.evaluateConstraint(constraint, result)) {
-        throw new Error(`Constraint violated: ${constraint}`);
-      }
-    }
-  }
-}
-```
-
-### Paso 3: Implementar Agentes Especializados
-
-Cada agente tiene un rol específico y solo hace eso:
-
-```javascript
-// agents/researcher.js
-class ResearcherAgent {
-  constructor() {
-    this.tools = ['web_search', 'fetch_url'];
-    this.systemPrompt = `
-      Eres un investigador experto. Tu trabajo es:
-      1. Buscar información relevante sobre el tema
-      2. Identificar fuentes confiables
-      3. Extraer datos clave y estadísticas
-      4. Compilar notas de investigación estructuradas
-
-      RESTRICCIONES:
-      - Solo usar fuentes de los últimos 2 años
-      - Mínimo 3 fuentes diferentes
-      - Verificar que las fuentes sean confiables
-
-      OUTPUT: JSON con estructura { sources: [], key_points: [], statistics: [] }
-    `;
-  }
-
-  async execute({ task, input, constraints }) {
-    // Usar LLM con el system prompt específico
-    const result = await llm.chat({
-      system: this.systemPrompt,
-      user: `Investiga: ${input.topic} para audiencia: ${input.target_audience}`,
-      tools: this.tools
-    });
-
-    return this.parseResearchNotes(result);
-  }
-}
-
-// agents/writer.js
-class WriterAgent {
-  constructor() {
-    this.systemPrompt = `
-      Eres un escritor técnico experto. Tu trabajo es:
-      1. Crear artículos claros y bien estructurados
-      2. Usar las notas de investigación proporcionadas
-      3. Adaptar el tono a la audiencia objetivo
-
-      ESTRUCTURA OBLIGATORIA:
-      - Título atractivo
-      - Introducción (gancho + contexto)
-      - Cuerpo (3-5 secciones)
-      - Conclusión con call-to-action
-
-      RESTRICCIONES:
-      - No inventar información
-      - Citar fuentes cuando uses datos
-      - Párrafos máximo 4 oraciones
-    `;
-  }
-
-  async execute({ task, input, constraints }) {
-    const result = await llm.chat({
-      system: this.systemPrompt,
-      user: `
-        Escribe un artículo de ${input.word_count} palabras.
-
-        TEMA: ${input.topic}
-        AUDIENCIA: ${input.target_audience}
-
-        INVESTIGACIÓN:
-        ${JSON.stringify(input.research_notes)}
-      `
-    });
-
-    return this.formatArticle(result);
-  }
-}
-
-// agents/reviewer.js
-class ReviewerAgent {
-  constructor() {
-    this.systemPrompt = `
-      Eres un editor experto. Tu trabajo es:
-      1. Revisar calidad del contenido
-      2. Verificar gramática y estilo
-      3. Evaluar SEO básico
-      4. Dar feedback accionable
-
-      CHECKLIST:
-      - [ ] Título claro y atractivo
-      - [ ] Introducción engancha al lector
-      - [ ] Estructura lógica
-      - [ ] Fuentes citadas correctamente
-      - [ ] Sin errores gramaticales
-      - [ ] Longitud apropiada
-      - [ ] Call-to-action presente
-
-      OUTPUT: { approved: boolean, score: number, feedback: string[] }
-    `;
-  }
-
-  async execute({ task, input }) {
-    const result = await llm.chat({
-      system: this.systemPrompt,
-      user: `Revisa este artículo:\n\n${input.draft}`
-    });
-
-    return JSON.parse(result);
-  }
-}
-
-// agents/publisher.js
-class PublisherAgent {
-  constructor(cmsEndpoint) {
-    this.cmsEndpoint = cmsEndpoint;
-  }
-
-  async execute({ task, input }) {
-    // Formatear para el CMS
-    const payload = {
-      title: input.final_draft.title,
-      content: input.final_draft.body,
-      excerpt: input.final_draft.excerpt,
-      status: 'publish',
-      categories: input.final_draft.categories,
-      tags: input.final_draft.tags
-    };
-
-    // Llamar API del CMS
-    const response = await fetch(`${this.cmsEndpoint}/posts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.CMS_TOKEN}`
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const result = await response.json();
-
-    return {
-      article_id: result.id,
-      url: result.link,
-      status: 'published'
-    };
-  }
-}
-```
-
-### Paso 4: Ejecutar el Sistema
-
-```javascript
-// main.js
-import { ArticleOrchestrator } from './orchestrator.js';
-import spec from './spec/create-article.yaml';
-
-async function main() {
-  const orchestrator = new ArticleOrchestrator(spec);
-
-  try {
-    const result = await orchestrator.execute({
-      topic: "Cómo implementar autenticación OAuth2 en Node.js",
-      target_audience: "desarrolladores backend junior",
-      word_count: 2000,
-      cms_endpoint: "https://mi-cms.com/api"
-    });
-
-    console.log('✅ Artículo publicado:', result.url);
-
-  } catch (error) {
-    console.error('❌ Error:', error.message);
-    // El sistema falló de forma predecible por violar spec
-  }
-}
-
-main();
-```
-
-## Beneficios de Spec Driven Development
-
-### 1. Predecibilidad
-
-Con specs claras, sabes exactamente qué esperar. No hay sorpresas.
-
-```yaml
-# Si el agente viola esto:
-constraints:
-  - Mínimo 3 fuentes citadas
-
-# El sistema falla inmediatamente con error claro:
-# "Constraint violated: Mínimo 3 fuentes citadas"
-```
-
-### 2. Debuggabilidad
-
-Cuando algo falla, sabes exactamente dónde:
+Vamos a crear un sistema de 4 "agentes" (archivos .md) que trabajan juntos:
 
 ```
-Step 1: researcher ✅
-Step 2: writer ✅
-Step 3: reviewer ❌ - Score 45 < 60 required
+~/.claude/commands/
+├── research.md      # Agente Investigador
+├── write.md         # Agente Escritor
+├── review.md        # Agente Revisor
+└── publish.md       # Agente Publicador
 ```
 
-### 3. Iterabilidad
+### Agente 1: Investigador (`research.md`)
 
-Mejorar el sistema es cambiar la spec:
+```markdown
+---
+description: Investiga un tema y genera notas estructuradas
+allowed-tools: WebSearch, WebFetch, Read
+---
 
-```yaml
-# Versión 1.0
-word_count: 1500
+# Rol
+Eres un investigador experto. Tu trabajo es recopilar información
+de calidad sobre un tema.
 
-# Versión 1.1 - Artículos más largos
-word_count: 2500
+# Objetivo
+Investigar: $ARGUMENTS
+
+# Instrucciones
+
+1. **Buscar información**
+   - Usa WebSearch para encontrar artículos relevantes
+   - Prioriza fuentes de los últimos 2 años
+   - Busca: tutoriales, documentación oficial, casos de estudio
+
+2. **Extraer información clave**
+   - Definiciones claras
+   - Estadísticas relevantes
+   - Ejemplos prácticos
+   - Errores comunes mencionados
+
+3. **Compilar notas**
+   - Organizar por temas
+   - Incluir URLs de fuentes
+   - Marcar lo más importante
+
+# Formato de Output
+
+Guarda en: `ai-logger/data/research/research-[tema]-[fecha].md`
+
+```markdown
+# Investigación: [Tema]
+
+## Fuentes Consultadas
+- [Título](URL) - Resumen en 1 línea
+
+## Puntos Clave
+- Punto 1
+- Punto 2
+
+## Estadísticas
+- Stat 1 (fuente)
+- Stat 2 (fuente)
+
+## Ejemplos Encontrados
+[Ejemplos relevantes]
+
+## Errores Comunes
+[Lo que la gente hace mal]
 ```
 
-### 4. Testabilidad
+# Restricciones
+- NO inventar información
+- NO usar fuentes anteriores a 2023
+- Mínimo 3 fuentes diferentes
+- NO incluir opiniones, solo hechos
 
-Puedes escribir tests contra la spec:
-
-```javascript
-test('article meets acceptance criteria', async () => {
-  const result = await orchestrator.execute(testInput);
-
-  expect(result.status).toBe('published');
-  expect(result.url).toMatch(/^https:\/\//);
-  expect(result.readability_score).toBeGreaterThan(60);
-});
+# Criterios de Éxito
+- [ ] Al menos 3 fuentes citadas
+- [ ] Puntos clave claros y accionables
+- [ ] Archivo guardado correctamente
 ```
 
-## Patrones Avanzados
+### Agente 2: Escritor (`write.md`)
 
-### Agentes con Memoria
+```markdown
+---
+description: Escribe un artículo basado en investigación previa
+allowed-tools: Read, Write
+---
 
-```javascript
-class AgentWithMemory {
-  constructor() {
-    this.shortTermMemory = []; // Conversación actual
-    this.longTermMemory = new VectorDB(); // Conocimiento persistente
-  }
+# Rol
+Eres un escritor técnico experto. Transformas investigación
+en artículos claros y atractivos.
 
-  async execute(task) {
-    // Buscar contexto relevante
-    const context = await this.longTermMemory.search(task.query);
+# Objetivo
+Escribir artículo sobre: $ARGUMENTS
 
-    // Ejecutar con contexto
-    const result = await this.run(task, context);
+# Instrucciones
 
-    // Guardar para futuro
-    await this.longTermMemory.store(result);
+1. **Leer investigación**
+   - Busca el archivo de investigación más reciente sobre el tema
+   - Ubicación: `ai-logger/data/research/`
 
-    return result;
-  }
-}
+2. **Planificar estructura**
+   - Título atractivo (promete valor)
+   - Hook en la introducción
+   - 3-5 secciones principales
+   - Conclusión con call-to-action
+
+3. **Escribir el artículo**
+   - Usa las notas de investigación
+   - Adapta al nivel de la audiencia
+   - Incluye ejemplos prácticos
+   - Párrafos cortos (máx 4 oraciones)
+
+# Formato de Output
+
+Guarda en: `ai-logger/data/drafts/draft-[fecha]-[slug].md`
+
+```markdown
+---
+title: "[Título]"
+date: [YYYY-MM-DD]
+category: [categoría]
+tags: [tag1, tag2]
+status: draft
+---
+
+# [Título]
+
+## Introducción
+[Gancho + Por qué importa + Qué aprenderá]
+
+## [Sección 1]
+[Contenido]
+
+## [Sección 2]
+[Contenido]
+
+## [Sección 3]
+[Contenido]
+
+## Conclusión
+[Resumen + Siguiente paso]
+
+---
+*Fuentes: [listar fuentes usadas]*
 ```
 
-### Agentes que se Auto-corrigen
+# Restricciones
+- NO inventar datos que no estén en la investigación
+- NO exceder 2500 palabras
+- NO usar jerga sin explicar
+- Citar fuentes cuando uses estadísticas
 
-```javascript
-async executeWithRetry(task, maxRetries = 2) {
-  for (let i = 0; i < maxRetries; i++) {
-    const result = await this.execute(task);
-    const review = await this.reviewer.evaluate(result);
-
-    if (review.approved) {
-      return result;
-    }
-
-    // Auto-corrección basada en feedback
-    task.feedback = review.feedback;
-    task.previousAttempt = result;
-  }
-
-  throw new Error('Max retries exceeded');
-}
+# Criterios de Éxito
+- [ ] Título claro y atractivo
+- [ ] Introducción engancha en 2 oraciones
+- [ ] Estructura lógica con headers
+- [ ] Ejemplos prácticos incluidos
+- [ ] Entre 1500-2500 palabras
 ```
 
-### Orquestación Condicional
+### Agente 3: Revisor (`review.md`)
 
-```yaml
-workflow:
-  1. researcher: Investigar → research_notes
-  2. writer: Escribir → draft
-  3. reviewer: Revisar → review
-  4. IF review.score < 60:
-       writer: Reescribir con feedback → draft
-       GOTO 3
-  5. publisher: Publicar → output
+```markdown
+---
+description: Revisa y mejora un artículo draft
+allowed-tools: Read, Write
+---
+
+# Rol
+Eres un editor experto. Tu trabajo es mejorar artículos
+sin cambiar la voz del autor.
+
+# Objetivo
+Revisar el artículo más reciente en `ai-logger/data/drafts/`
+
+# Instrucciones
+
+1. **Leer el draft**
+   - Lee el artículo completo
+   - Identifica el objetivo y audiencia
+
+2. **Evaluar con checklist**
+
+   **Contenido:**
+   - [ ] ¿El título promete valor claro?
+   - [ ] ¿La intro engancha en 10 segundos?
+   - [ ] ¿Cada sección aporta valor?
+   - [ ] ¿Los ejemplos son claros?
+   - [ ] ¿La conclusión da siguiente paso?
+
+   **Claridad:**
+   - [ ] ¿Párrafos de máx 4 oraciones?
+   - [ ] ¿Sin jerga inexplicada?
+   - [ ] ¿Flujo lógico entre secciones?
+
+   **Técnico:**
+   - [ ] ¿Código formateado correctamente?
+   - [ ] ¿Fuentes citadas?
+   - [ ] ¿Sin errores gramaticales?
+
+3. **Generar feedback**
+   - Lista de mejoras específicas
+   - Sugerencias concretas (no vagas)
+
+4. **Aplicar correcciones menores**
+   - Errores de gramática
+   - Formato de código
+   - Typos
+
+# Formato de Output
+
+Actualiza el draft con correcciones menores.
+
+Crea archivo de feedback: `ai-logger/data/reviews/review-[fecha].md`
+
+```markdown
+# Review: [Título del Artículo]
+
+## Score: [X/10]
+
+## ✅ Lo que está bien
+- Punto 1
+- Punto 2
+
+## 🔧 Mejoras Necesarias
+1. **[Sección]**: [Qué mejorar y cómo]
+2. **[Sección]**: [Qué mejorar y cómo]
+
+## 📝 Correcciones Aplicadas
+- [Lista de correcciones menores hechas]
+
+## Recomendación
+[ ] Listo para publicar
+[ ] Necesita otra revisión
+[ ] Reescribir sección X
 ```
 
-## Errores Comunes a Evitar
+# Restricciones
+- NO reescribir el artículo completo
+- NO cambiar la voz del autor
+- NO agregar información nueva
+- Feedback específico, no vago ("mejorar intro" ❌, "agregar ejemplo en línea 45" ✅)
 
-### ❌ Specs Vagas
+# Criterios de Éxito
+- [ ] Checklist completado
+- [ ] Feedback accionable generado
+- [ ] Correcciones menores aplicadas
+- [ ] Recomendación clara dada
+```
 
-```yaml
+### Agente 4: Publicador (`publish.md`)
+
+```markdown
+---
+description: Publica un artículo aprobado en el CMS
+allowed-tools: Read, Bash, Write
+---
+
+# Rol
+Eres el publicador. Tu trabajo es tomar artículos aprobados
+y publicarlos en el destino correcto.
+
+# Objetivo
+Publicar el artículo: $ARGUMENTS
+
+# Instrucciones
+
+1. **Verificar aprobación**
+   - Leer el review más reciente
+   - Solo continuar si dice "Listo para publicar"
+
+2. **Preparar para publicación**
+   - Leer el draft final
+   - Cambiar status de "draft" a "published"
+   - Verificar que tiene todos los campos requeridos
+
+3. **Mover a carpeta de publicación**
+   - Origen: `ai-logger/data/drafts/`
+   - Destino: `ai-logger/data/articles/`
+   - Renombrar quitando "draft-" del nombre
+
+4. **Actualizar índice**
+   - Ejecutar: `bun ai-logger/scripts/build-index.js`
+
+5. **Commit y push**
+   - Agregar archivo al git
+   - Commit con mensaje descriptivo
+   - Push a la rama
+
+# Formato de Output
+
+Confirmar publicación:
+
+```
+✅ Artículo Publicado
+
+Título: [título]
+Archivo: [path]
+Fecha: [fecha]
+
+Próximo paso: Merge a main para deploy
+```
+
+# Restricciones
+- NO publicar si el review no aprueba
+- NO modificar el contenido del artículo
+- NO hacer push a main directamente
+
+# Criterios de Éxito
+- [ ] Review dice "Listo para publicar"
+- [ ] Archivo movido correctamente
+- [ ] Índice actualizado
+- [ ] Commit realizado
+```
+
+## Flujo de Trabajo Completo
+
+Con estos 4 agentes, el flujo es:
+
+```
+/research OAuth2 para principiantes
+    ↓
+[Genera: research-oauth2-2025-12-24.md]
+    ↓
+/write OAuth2 para principiantes
+    ↓
+[Genera: draft-2025-12-24-oauth2.md]
+    ↓
+/review
+    ↓
+[Genera: review-2025-12-24.md + correcciones]
+    ↓
+/publish oauth2
+    ↓
+[Mueve a articles/ + commit]
+```
+
+**4 comandos. Artículo publicado.**
+
+## Beneficios de Specs en Markdown
+
+### 1. Sin Código
+No necesitas saber programar. Solo escribir instrucciones claras.
+
+### 2. Versionable
+Los archivos `.md` van en git. Puedes ver historial, hacer rollback.
+
+### 3. Colaborativo
+Cualquiera puede mejorar las specs. No se necesita un desarrollador.
+
+### 4. Reutilizable
+Los mismos agentes sirven para cualquier artículo.
+
+### 5. Predecible
+Con specs claras, el output es consistente.
+
+## Tips para Escribir Buenas Specs
+
+### ✅ Sé Específico
+
+```markdown
 # MAL
-constraints:
-  - El artículo debe ser bueno
+"Escribe un buen artículo"
 
 # BIEN
-constraints:
-  - Score de legibilidad > 60
-  - Entre 1500-2000 palabras
-  - Mínimo 3 secciones con headers H2
+"Escribe un artículo de 1500-2000 palabras, con 4-5 secciones,
+para desarrolladores junior, incluyendo al menos 2 ejemplos de código"
 ```
 
-### ❌ Agentes Todoterreno
+### ✅ Define el Output Exacto
 
-```javascript
-// MAL - Un agente hace todo
-const superAgent = new Agent({
-  role: "Investigar, escribir, revisar y publicar"
-});
+```markdown
+# MAL
+"Guarda el resultado"
 
-// BIEN - Agentes especializados
-const researcher = new ResearcherAgent();
-const writer = new WriterAgent();
-const reviewer = new ReviewerAgent();
+# BIEN
+"Guarda en: ai-logger/data/articles/[fecha]-[slug].md
+Con formato:
+---
+title: ...
+date: ...
+---
+[contenido]"
 ```
 
-### ❌ Sin Validación
+### ✅ Lista Restricciones
 
-```javascript
-// MAL - Confiar ciegamente en el output
-const article = await writer.execute(task);
-publishDirectly(article);
+```markdown
+# RESTRICCIONES
+- NO inventar estadísticas
+- NO exceder 2500 palabras
+- NO usar jerga sin explicar
+- Máximo 4 oraciones por párrafo
+```
 
-// BIEN - Validar contra spec
-const article = await writer.execute(task);
-const validation = await validator.check(article, spec.constraints);
-if (validation.passed) {
-  publish(article);
-}
+### ✅ Incluye Criterios de Éxito
+
+```markdown
+# CRITERIOS DE ÉXITO
+- [ ] Título menor a 60 caracteres
+- [ ] Introducción engancha en 2 oraciones
+- [ ] Al menos 3 fuentes citadas
+- [ ] Código con syntax highlighting
 ```
 
 ## Conclusión
 
-Spec Driven Development transforma agentes caóticos en sistemas predecibles:
+No necesitas TypeScript, Python, ni frameworks complejos para crear un sistema de agentes.
 
-1. **Define la spec primero** — qué, cómo, restricciones
-2. **Agentes especializados** — cada uno hace una cosa bien
-3. **Orquestador central** — coordina el flujo
-4. **Validación constante** — verificar contra spec en cada paso
+Con Claude Code + Markdown:
 
-El resultado: agentes que **hacen lo que esperas**, fallan de forma **predecible**, y son **fáciles de mejorar**.
+1. **Define specs claras** en archivos `.md`
+2. **Usa slash commands** para ejecutar cada agente
+3. **Los outputs alimentan** al siguiente agente
+4. **El resultado es predecible** y consistente
 
-La IA sin metodología es un juguete. Con Spec Driven Development, es una herramienta de producción.
-
----
-
-## Recursos
-
-- [Agent Protocol Spec](https://agentprotocol.ai/)
-- [LangChain Agents](https://python.langchain.com/docs/modules/agents/)
-- [Claude Code Hooks](https://docs.anthropic.com/claude-code/hooks)
+Spec Driven Development es **escribir bien lo que quieres**. El código es opcional.
 
 ---
 
-*¿Implementaste algo similar? Cuéntame tu experiencia.*
+*¿Quieres ver estos agentes en acción? Están disponibles en el repo de ai-explicative.*
