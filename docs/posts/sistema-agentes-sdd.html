@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cómo Construir un Sistema de Agentes con Spec Driven Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        pre { background: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+        code { font-family: 'Fira Code', monospace; }
+        .prose pre code { color: #e5e7eb; }
+        .prose code:not(pre code) { background: #374151; padding: 0.2rem 0.4rem; border-radius: 0.25rem; color: #fbbf24; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-gray-900/80 backdrop-blur-sm z-50 border-b border-gray-700">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="../index.html" class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    AI Dev Experience
+                </a>
+                <a href="../index.html" class="hover:text-blue-400 transition flex items-center gap-2">
+                    <span>←</span> Volver
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Article -->
+    <article class="pt-24 pb-16 px-6">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <header class="mb-12">
+                <div class="flex gap-2 mb-4 flex-wrap">
+                    <span class="text-xs bg-orange-600 px-3 py-1 rounded-full">Arquitectura</span>
+                    <span class="text-xs bg-blue-600 px-3 py-1 rounded-full">Agentes</span>
+                    <span class="text-xs bg-purple-600 px-3 py-1 rounded-full">SDD</span>
+                    <span class="text-xs bg-green-600 px-3 py-1 rounded-full">TDD</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    Cómo Construir un Sistema de Agentes con Spec Driven Development
+                </h1>
+                <div class="flex items-center gap-4 text-gray-400">
+                    <span>24 Diciembre 2025</span>
+                    <span>•</span>
+                    <span>15 min de lectura</span>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="prose prose-invert max-w-none">
+                <!-- Introducción -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Introducción</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                        ¿Crees que necesitas saber programar para crear un sistema de agentes de IA? <strong class="text-yellow-400">No.</strong>
+                    </p>
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        Con Claude Code y Markdown, puedes construir flujos de trabajo potentes usando solo archivos <code>.md</code>. Los "agentes" son simplemente <strong class="text-white">especificaciones bien escritas</strong>.
+                    </p>
+                </section>
+
+                <!-- Qué es SDD -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">¿Qué es Spec Driven Development?</h2>
+                    <div class="bg-gradient-to-r from-blue-900/50 to-purple-900/50 rounded-xl p-6 mb-6 border border-blue-500/30">
+                        <p class="text-xl text-gray-200 italic">
+                            "Primero defines QUÉ quieres, CÓMO lo quieres, y las RESTRICCIONES. Después ejecutas."
+                        </p>
+                    </div>
+                    <p class="text-gray-300 mb-4">En lugar de decirle a la IA "escríbeme un artículo", le das:</p>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-2 ml-4">
+                        <li><strong class="text-white">Especificación clara</strong> — qué debe hacer exactamente</li>
+                        <li><strong class="text-white">Formato esperado</strong> — cómo debe verse el output</li>
+                        <li><strong class="text-white">Restricciones</strong> — qué NO debe hacer</li>
+                        <li><strong class="text-white">Criterios de éxito</strong> — cómo saber si está bien</li>
+                    </ol>
+                </section>
+
+                <!-- Sin Spec vs Con Spec -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Sin Spec vs Con Spec</h2>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
+                            <h3 class="text-lg font-bold text-red-400 mb-3">❌ Sin spec:</h3>
+                            <pre class="text-sm"><code>"Escribe un artículo sobre OAuth2"</code></pre>
+                            <p class="text-gray-400 mt-3 text-sm">Resultado: Artículo genérico, longitud aleatoria, sin estructura clara.</p>
+                        </div>
+                        <div class="bg-green-900/20 rounded-xl p-6 border border-green-500/30">
+                            <h3 class="text-lg font-bold text-green-400 mb-3">✅ Con spec:</h3>
+                            <pre class="text-sm"><code>Escribe un artículo técnico sobre OAuth2.
+
+AUDIENCIA: Desarrolladores backend junior
+LONGITUD: 1500-2000 palabras
+ESTRUCTURA:
+- Título atractivo
+- Introducción con gancho
+- Ejemplo práctico con código
+- Errores comunes
+- Conclusión
+
+RESTRICCIONES:
+- No asumir conocimiento previo
+- Citar fuentes si usas estadísticas</code></pre>
+                            <p class="text-gray-400 mt-3 text-sm">Resultado: Exactamente lo que necesitas.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Estructura de un Agente -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-purple-400 mb-4">Los "Agentes" son Specs en Markdown</h2>
+                    <p class="text-gray-300 mb-4">Un "agente" no es más que un archivo <code>.md</code> con instrucciones específicas. En Claude Code, estos son <strong class="text-white">slash commands</strong>.</p>
+                    <pre><code>---
+description: Qué hace este agente (una línea)
+allowed-tools: Herramientas que puede usar
+---
+
+# Rol
+[Quién es este agente]
+
+# Objetivo
+[Qué debe lograr]
+
+# Instrucciones
+[Pasos específicos]
+
+# Formato de Output
+[Cómo debe verse el resultado]
+
+# Restricciones
+[Qué NO hacer]
+
+# Criterios de Éxito
+[Cómo saber si está bien]</code></pre>
+                </section>
+
+                <!-- Sistema de Artículos -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Caso de Uso: Sistema para Crear Artículos</h2>
+                    <p class="text-gray-300 mb-4">4 "agentes" (archivos .md) que trabajan juntos:</p>
+                    <div class="bg-gray-800 rounded-xl p-6 font-mono text-sm mb-6">
+                        <pre class="text-gray-300">~/.claude/commands/
+├── research.md      # Agente Investigador
+├── write.md         # Agente Escritor
+├── review.md        # Agente Revisor
+└── publish.md       # Agente Publicador</pre>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-800 rounded-xl p-5 border border-blue-500/30">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-2xl">🔍</span>
+                                <h3 class="font-bold text-blue-400">Investigador</h3>
+                            </div>
+                            <p class="text-gray-400 text-sm">Busca información, extrae puntos clave, compila notas con fuentes citadas.</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-5 border border-green-500/30">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-2xl">✍️</span>
+                                <h3 class="font-bold text-green-400">Escritor</h3>
+                            </div>
+                            <p class="text-gray-400 text-sm">Transforma la investigación en artículos claros con estructura lógica.</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-5 border border-purple-500/30">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-2xl">📝</span>
+                                <h3 class="font-bold text-purple-400">Revisor</h3>
+                            </div>
+                            <p class="text-gray-400 text-sm">Evalúa con checklist, genera feedback específico, aplica correcciones menores.</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-5 border border-orange-500/30">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="text-2xl">🚀</span>
+                                <h3 class="font-bold text-orange-400">Publicador</h3>
+                            </div>
+                            <p class="text-gray-400 text-sm">Verifica aprobación, mueve a producción, actualiza índice, commit.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <h3 class="font-bold text-white mb-4">Flujo completo:</h3>
+                        <pre class="text-gray-300 text-sm"><code>/research OAuth2 para principiantes
+    ↓ [Genera: research-oauth2-2025-12-24.md]
+/write OAuth2 para principiantes
+    ↓ [Genera: draft-2025-12-24-oauth2.md]
+/review
+    ↓ [Genera: review-2025-12-24.md + correcciones]
+/publish oauth2
+    ↓ [Mueve a articles/ + commit]</code></pre>
+                        <p class="text-yellow-400 font-semibold mt-4 text-center">4 comandos. Artículo publicado.</p>
+                    </div>
+                </section>
+
+                <!-- Sistema de Desarrollo -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Agentes Especializados para Desarrollo de Software</h2>
+                    <p class="text-gray-300 mb-6">
+                        En lugar de un agente genérico que "hace todo", creamos <strong class="text-white">especialistas</strong>:
+                    </p>
+
+                    <div class="bg-gray-800 rounded-xl p-6 font-mono text-sm mb-6 overflow-x-auto">
+                        <pre class="text-gray-300">┌─────────────────────────────────────────────────────────┐
+│                    FEATURE SPEC                         │
+│         (Documento que define qué construir)            │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────┐   ┌─────────────┐   ┌─────────────┐
+│  ARQUITECTO │ → │   DOMAIN    │ → │   SYMFONY   │
+│             │   │   EXPERT    │   │   EXPERT    │
+└─────────────┘   └─────────────┘   └─────────────┘
+                          │
+                          ▼
+              ┌─────────────────────┐
+              │   TEST EXPERT       │
+              │  (TDD obligatorio)  │
+              └─────────────────────┘
+                          │
+                          ▼
+              ┌─────────────────────┐
+              │   CODE REVIEWER     │
+              └─────────────────────┘</pre>
+                    </div>
+
+                    <!-- Agentes de desarrollo -->
+                    <div class="space-y-6">
+                        <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-blue-500">
+                            <h3 class="text-xl font-bold text-blue-400 mb-3">🏗️ Arquitecto</h3>
+                            <p class="text-gray-300 mb-3">Diseña ANTES de implementar. Explora alternativas con trade-offs.</p>
+                            <ul class="text-gray-400 text-sm space-y-1">
+                                <li>• Entiende el contexto del proyecto</li>
+                                <li>• Presenta 2-3 opciones con pros/contras</li>
+                                <li>• Documenta decisiones y justificaciones</li>
+                                <li>• <strong class="text-red-400">NO escribe código de implementación</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-green-500">
+                            <h3 class="text-xl font-bold text-green-400 mb-3">🎯 Domain Expert</h3>
+                            <p class="text-gray-300 mb-3">Valida lógica de negocio con DDD (Domain-Driven Design).</p>
+                            <ul class="text-gray-400 text-sm space-y-1">
+                                <li>• Identifica Entidades y Value Objects</li>
+                                <li>• Define Agregados e invariantes</li>
+                                <li>• Documenta reglas de negocio</li>
+                                <li>• Establece el Ubiquitous Language</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-purple-500">
+                            <h3 class="text-xl font-bold text-purple-400 mb-3">⚙️ Framework Expert (Symfony)</h3>
+                            <p class="text-gray-300 mb-3">Implementa siguiendo best practices del framework.</p>
+                            <ul class="text-gray-400 text-sm space-y-1">
+                                <li>• Controllers delgados (máx 20 líneas)</li>
+                                <li>• Repository pattern para queries</li>
+                                <li>• Events para side-effects</li>
+                                <li>• <strong class="text-yellow-400">OBLIGATORIO: Usar /tdd para cada componente</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-red-500">
+                            <h3 class="text-xl font-bold text-red-400 mb-3">🔬 TDD Expert</h3>
+                            <p class="text-gray-300 mb-3">Mantra: <em>"NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST"</em></p>
+                            <div class="flex gap-4 mt-4 flex-wrap">
+                                <div class="bg-red-900/30 px-4 py-2 rounded-lg">
+                                    <span class="text-red-400 font-bold">🔴 RED</span>
+                                    <p class="text-xs text-gray-400">Test que falla</p>
+                                </div>
+                                <span class="text-gray-500 self-center">→</span>
+                                <div class="bg-green-900/30 px-4 py-2 rounded-lg">
+                                    <span class="text-green-400 font-bold">🟢 GREEN</span>
+                                    <p class="text-xs text-gray-400">Código mínimo</p>
+                                </div>
+                                <span class="text-gray-500 self-center">→</span>
+                                <div class="bg-blue-900/30 px-4 py-2 rounded-lg">
+                                    <span class="text-blue-400 font-bold">🔄 REFACTOR</span>
+                                    <p class="text-xs text-gray-400">Limpiar</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800 rounded-xl p-6 border-l-4 border-yellow-500">
+                            <h3 class="text-xl font-bold text-yellow-400 mb-3">👁️ Code Reviewer</h3>
+                            <p class="text-gray-300 mb-3">Dos fases de revisión:</p>
+                            <div class="grid md:grid-cols-2 gap-4 mt-4">
+                                <div class="bg-gray-900/50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-white mb-2">Fase 1: Spec Compliance</h4>
+                                    <p class="text-gray-400 text-sm">¿El código cumple con la spec? Si falla → STOP.</p>
+                                </div>
+                                <div class="bg-gray-900/50 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-white mb-2">Fase 2: Code Quality</h4>
+                                    <p class="text-gray-400 text-sm">Legibilidad, mantenibilidad, robustez, tests.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Por qué Funciona -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-green-400 mb-4">Por qué Funciona</h2>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-gray-800 rounded-xl p-5">
+                            <h3 class="font-bold text-white mb-2">1. Separación de Concerns</h3>
+                            <p class="text-gray-400 text-sm">El arquitecto diseña, no implementa. El domain expert valida negocio, no código.</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-5">
+                            <h3 class="font-bold text-white mb-2">2. Checks Múltiples</h3>
+                            <p class="text-gray-400 text-sm">Diseño → Dominio → Implementación → Tests → Code review en dos fases.</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-5">
+                            <h3 class="font-bold text-white mb-2">3. Documentación Automática</h3>
+                            <p class="text-gray-400 text-sm">Cada agente genera documentos. Historial de decisiones preservado.</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-5">
+                            <h3 class="font-bold text-white mb-2">4. Calidad Consistente</h3>
+                            <p class="text-gray-400 text-sm">Mismos estándares siempre. Sin "atajos" por prisa. TDD obligatorio.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tips para Buenas Specs -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-purple-400 mb-4">Tips para Escribir Buenas Specs</h2>
+                    <div class="space-y-4">
+                        <div class="bg-gray-800 rounded-lg p-5">
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Sé Específico</h3>
+                            <div class="grid md:grid-cols-2 gap-4 text-sm">
+                                <div class="bg-red-900/20 p-3 rounded"><code class="text-red-400">"Escribe un buen artículo"</code></div>
+                                <div class="bg-green-900/20 p-3 rounded"><code class="text-green-400">"Artículo de 1500-2000 palabras, 4-5 secciones, para devs junior"</code></div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-5">
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Define el Output Exacto</h3>
+                            <div class="grid md:grid-cols-2 gap-4 text-sm">
+                                <div class="bg-red-900/20 p-3 rounded"><code class="text-red-400">"Guarda el resultado"</code></div>
+                                <div class="bg-green-900/20 p-3 rounded"><code class="text-green-400">"Guarda en: data/articles/[fecha]-[slug].md con formato YAML frontmatter"</code></div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-5">
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Lista Restricciones</h3>
+                            <pre class="text-sm mt-2"><code># RESTRICCIONES
+- NO inventar estadísticas
+- NO exceder 2500 palabras
+- NO usar jerga sin explicar
+- Máximo 4 oraciones por párrafo</code></pre>
+                        </div>
+                        <div class="bg-gray-800 rounded-lg p-5">
+                            <h3 class="font-semibold text-green-400 mb-2">✅ Incluye Criterios de Éxito</h3>
+                            <pre class="text-sm mt-2"><code># CRITERIOS DE ÉXITO
+- [ ] Título menor a 60 caracteres
+- [ ] Introducción engancha en 2 oraciones
+- [ ] Al menos 3 fuentes citadas
+- [ ] Código con syntax highlighting</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Conclusión -->
+                <section class="mb-12 bg-gradient-to-r from-orange-900/50 to-purple-900/50 rounded-xl p-6 border border-orange-500/30">
+                    <h2 class="text-2xl font-bold text-orange-400 mb-4">Conclusión</h2>
+                    <p class="text-gray-300 mb-4">
+                        No necesitas TypeScript, Python, ni frameworks complejos para crear un sistema de agentes profesional.
+                    </p>
+                    <p class="text-gray-300 mb-6">Con Claude Code + Markdown:</p>
+                    <ol class="list-decimal list-inside text-gray-300 space-y-2 mb-6">
+                        <li><strong class="text-white">Define specs claras</strong> en archivos <code>.md</code></li>
+                        <li><strong class="text-white">Crea agentes especializados</strong> — arquitecto, domain expert, framework expert, TDD expert, reviewer</li>
+                        <li><strong class="text-white">Usa slash commands</strong> para ejecutar cada agente</li>
+                        <li><strong class="text-white">Los outputs alimentan</strong> al siguiente agente</li>
+                        <li><strong class="text-white">El resultado es predecible</strong>, consistente, y de alta calidad</li>
+                    </ol>
+
+                    <div class="bg-gray-900/50 rounded-lg p-4 text-center">
+                        <p class="text-xl font-bold text-yellow-400">
+                            Feature Spec + Agentes Especializados + TDD Obligatorio = Código de Calidad
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Resumen del Sistema -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-bold text-blue-400 mb-4">Resumen del Sistema</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-700">
+                                    <th class="py-3 px-4 text-blue-400">Agente</th>
+                                    <th class="py-3 px-4 text-blue-400">Responsabilidad</th>
+                                    <th class="py-3 px-4 text-blue-400">Output</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-300">
+                                <tr class="border-b border-gray-800">
+                                    <td class="py-3 px-4">Arquitecto</td>
+                                    <td class="py-3 px-4">Diseñar antes de implementar</td>
+                                    <td class="py-3 px-4"><code>docs/designs/*.md</code></td>
+                                </tr>
+                                <tr class="border-b border-gray-800">
+                                    <td class="py-3 px-4">Domain Expert</td>
+                                    <td class="py-3 px-4">Validar lógica de negocio</td>
+                                    <td class="py-3 px-4">Modelo de dominio documentado</td>
+                                </tr>
+                                <tr class="border-b border-gray-800">
+                                    <td class="py-3 px-4">Framework Expert</td>
+                                    <td class="py-3 px-4">Implementar con best practices</td>
+                                    <td class="py-3 px-4">Código estructurado</td>
+                                </tr>
+                                <tr class="border-b border-gray-800">
+                                    <td class="py-3 px-4">TDD Expert</td>
+                                    <td class="py-3 px-4">Tests primero, siempre</td>
+                                    <td class="py-3 px-4">Código con 100% cobertura</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4">Code Reviewer</td>
+                                    <td class="py-3 px-4">Verificar spec + calidad</td>
+                                    <td class="py-3 px-4">Feedback accionable</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="text-center">
+                    <p class="text-xl text-gray-300">
+                        Spec Driven Development es <strong class="text-white">escribir bien lo que quieres</strong>.
+                    </p>
+                    <p class="text-xl text-gray-300 mb-6">
+                        Los agentes especializados aseguran que <strong class="text-white">cada paso se hace correctamente</strong>.
+                    </p>
+                    <p class="text-2xl font-bold text-yellow-400">
+                        El código es opcional. La calidad no.
+                    </p>
+                </section>
+            </div>
+        </div>
+    </article>
+
+    <!-- Footer -->
+    <footer class="py-8 px-6 border-t border-gray-700 bg-gray-900">
+        <div class="max-w-4xl mx-auto text-center text-gray-500">
+            <p>© 2025 AI Dev Experience</p>
+        </div>
+    </footer>
+</body>
+</html>
